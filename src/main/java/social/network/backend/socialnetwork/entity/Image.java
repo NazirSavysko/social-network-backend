@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 
 @Getter
 @Setter
@@ -15,10 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public final class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = SEQUENCE)
     private Integer id;
 
-    @Column(name = "file_path")
     private String filePath;
 
 }

@@ -6,19 +6,22 @@ import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.service.MessageService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public Message getMessageById(final Integer messageId) {
+    public Optional<Message> getMessageById(final Integer messageId) {
 
-        return Message.builder()
-                .id(messageId)
-                .sender(User.builder().build())
-                .recipient(User.builder().build())
-                .build();
+        return Optional.of(
+                Message.builder()
+                        .id(messageId)
+                        .sender(User.builder().build())
+                        .recipient(User.builder().build())
+                        .build()
+        );
     }
 
     @Override

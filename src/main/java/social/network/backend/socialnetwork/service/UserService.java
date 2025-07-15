@@ -2,13 +2,16 @@ package social.network.backend.socialnetwork.service;
 
 import social.network.backend.socialnetwork.entity.User;
 
+import java.util.Optional;
+
 public interface UserService {
 
-    User getUserById(Integer id);
+    Optional<User> getUserById(Integer id);
 
-    User createUser(User user);
-
-    User updateUser(User user);
 
     void deleteUser(Integer id);
+
+    User createUser(String email, String name, String surname, String password);
+
+    User updateUser(Integer id, String email, String name, String surname, String password);
 }

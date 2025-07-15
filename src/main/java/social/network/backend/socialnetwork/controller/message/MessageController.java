@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdateMessagePayload;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
@@ -33,8 +34,7 @@ public final class MessageController {
     public @NotNull ResponseEntity<?> getMessage(@ModelAttribute("message") GetMessageDTO message) {
 
         return ResponseEntity
-                .ok()
-                .body(message);
+                .ok(message);
     }
 
     @PutMapping("/update")
@@ -46,8 +46,7 @@ public final class MessageController {
         final GetMessageDTO updatedMessage = this.messageFacade.updateMessage(updateMessageDTO, result);
 
         return ResponseEntity
-                .ok()
-                .body(updatedMessage);
+                .ok(updatedMessage);
     }
 
     @DeleteMapping("/delete")

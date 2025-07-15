@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @Entity
 @Table(name = "message")
 @Setter
@@ -14,21 +16,18 @@ import java.time.LocalDateTime;
 @Builder
 public final class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = SEQUENCE)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
+    @ManyToOne
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id")
+    @ManyToOne
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private User recipient;
 
-    @Column(name = "message_date")
     private LocalDateTime messageDate;
 
-    @Column(name = "message_text")
     private String messageText;
-
 }

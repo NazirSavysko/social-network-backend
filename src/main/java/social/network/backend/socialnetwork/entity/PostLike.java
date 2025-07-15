@@ -19,15 +19,14 @@ public final class PostLike {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id")
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
 }

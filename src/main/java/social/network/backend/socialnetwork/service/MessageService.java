@@ -3,11 +3,12 @@ package social.network.backend.socialnetwork.service;
 import social.network.backend.socialnetwork.entity.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageService {
 
 
-    Message getMessageById(Integer messageId);
+    Optional<Message> getMessageById(Integer messageId);
 
 
     void deleteMessage(Integer messageId);

@@ -1,13 +1,7 @@
 package social.network.backend.socialnetwork.facade.mapper;
 
 
-public interface Mapper<E,U,C,G> {
-
-    E toEntityFromCreate(C dtoForCreate);
-
-    E toEntityFromUpdate(U dtoForUpdate);
-
+@FunctionalInterface
+public interface Mapper<E,G> {
     G toDto(E entity);
-
-
 }

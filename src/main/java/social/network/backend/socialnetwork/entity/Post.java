@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -25,15 +24,14 @@ public final class Post {
 
     private String postText;
 
-    @Column(name = "post_date")
     private LocalDateTime postDate;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "image_id")
+    @OneToOne
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
 }
