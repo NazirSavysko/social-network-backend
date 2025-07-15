@@ -24,6 +24,7 @@ public final class MessageMapperImpl implements Mapper<Message, UpdateMessageDTO
 
     @Override
     public Message toEntityFromCreate(final @NotNull CreateMessageDTO dtoForCreate) {
+
         return Message.builder()
                 .messageText(dtoForCreate.content())
                 .sender(User.builder()
@@ -37,6 +38,7 @@ public final class MessageMapperImpl implements Mapper<Message, UpdateMessageDTO
 
     @Override
     public Message toEntityFromUpdate(final @NotNull UpdateMessageDTO dtoForUpdate) {
+
         return Message.builder()
                 .id(dtoForUpdate.id())
                 .sender(User.builder().build())
@@ -49,6 +51,7 @@ public final class MessageMapperImpl implements Mapper<Message, UpdateMessageDTO
     @Contract("_ -> new")
     @Override
     public @NotNull GetMessageDTO toDto(final @NotNull Message entity) {
+
         return new GetMessageDTO(
                 entity.getId(),
                 entity.getMessageText(),

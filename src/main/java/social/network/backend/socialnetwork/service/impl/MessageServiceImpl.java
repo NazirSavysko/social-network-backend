@@ -1,6 +1,5 @@
 package social.network.backend.socialnetwork.service.impl;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import social.network.backend.socialnetwork.entity.Message;
 import social.network.backend.socialnetwork.entity.User;
@@ -10,31 +9,13 @@ import java.util.List;
 
 @Service
 public class MessageServiceImpl implements MessageService {
-    @Override
-    public Message createMessage(final @NotNull Message message) {
-        return Message.builder()
-                .id(1)
-                .messageText(message.getMessageText())
-                .sender(message.getSender())
-                .recipient(message.getRecipient())
-                .build();
-    }
+
 
     @Override
     public Message getMessageById(final Integer messageId) {
 
         return Message.builder()
                 .id(messageId)
-                .sender(User.builder().build())
-                .recipient(User.builder().build())
-                .build();
-    }
-
-    @Override
-    public Message updateMessage(final @NotNull Message message) {
-        return Message.builder()
-                .id(message.getId())
-                .messageText(message.getMessageText())
                 .sender(User.builder().build())
                 .recipient(User.builder().build())
                 .build();
@@ -65,5 +46,31 @@ public class MessageServiceImpl implements MessageService {
                         .recipient(User.builder().build())
                         .build()
         );
+    }
+
+    @Override
+    public Message createMessage(final String content, final Integer senderId, final Integer recipientId) {
+        final User sender = User.builder().id(senderId).build();
+        final User recipient = User.builder().id(recipientId).build();
+
+        return Message.builder()
+                .id(1)
+                .sender(sender)
+                .recipient(recipient)
+                .messageText(content)
+                .build();
+    }
+
+    @Override
+    public Message updateMessage(final Integer id, final String content) {
+        final User sender = User.builder().build();
+        final User recipient = User.builder().build();
+
+        return Message.builder()
+                .id(id)
+                .sender(sender)
+                .recipient(recipient)
+                .messageText(content)
+                .build();
     }
 }

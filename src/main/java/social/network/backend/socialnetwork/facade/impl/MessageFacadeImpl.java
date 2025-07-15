@@ -46,9 +46,7 @@ public final class MessageFacadeImpl implements MessageFacade {
                             .orElse("Unknown error")
             );
         } else {
-
-            final Message message = this.messageMapper.toEntityFromCreate(createMessageDTO);
-            final Message savedMessage = this.messageService.createMessage(message);
+            final Message savedMessage = this.messageService.createMessage(createMessageDTO.content(), createMessageDTO.senderId(), createMessageDTO.receiverId());
 
             return this.messageMapper.toDto(savedMessage);
         }
@@ -65,9 +63,7 @@ public final class MessageFacadeImpl implements MessageFacade {
                             .orElse("Unknown error")
             );
         } else {
-
-            final Message message = this.messageMapper.toEntityFromUpdate(dtoForUpdate);
-            final Message updatedMessage = this.messageService.updateMessage(message);
+            final Message updatedMessage = this.messageService.updateMessage(dtoForUpdate.id(), dtoForUpdate.content());
 
             return this.messageMapper.toDto(updatedMessage);
         }
@@ -79,8 +75,8 @@ public final class MessageFacadeImpl implements MessageFacade {
 
             throw new IllegalArgumentException("Message ID must be a positive integer.");
         } else {
+            final Message message = this.messageService.getMessageById(messageId);
 
-            Message message = this.messageService.getMessageById(messageId);
             if (message == null) {
                 throw new NoSuchElementException("Message with ID " + messageId + " not found.");
             }
@@ -101,6 +97,7 @@ public final class MessageFacadeImpl implements MessageFacade {
     @Contract(pure = true)
     @Override
     public @NotNull @Unmodifiable List<GetMessageDTO> getAllMessagesByUserId(final Integer userId) {
+
         return this.messageService.getAllMessagesByUserId(userId).stream()
                 .map(this.messageMapper::toDto)
                 .toList();
