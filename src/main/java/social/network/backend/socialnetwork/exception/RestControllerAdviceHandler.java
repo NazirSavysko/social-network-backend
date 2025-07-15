@@ -34,4 +34,5 @@ public final class RestControllerAdviceHandler {
                 .status(NOT_FOUND)
                 .body(e.getMessage());
     }
+
 }
