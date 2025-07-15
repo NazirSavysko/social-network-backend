@@ -21,6 +21,7 @@ public class UserController {
 
     @ModelAttribute("user")
     public GetUserDTO getUserId(@PathVariable("userId") Integer userId) {
+
         return this.userFacade.getUserById(userId);
     }
 
@@ -36,7 +37,6 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO,
                                         final BindingResult result) {
-
         final GetUserDTO updatedUser = this.userFacade.updateUser(updateUserDTO, result);
 
         return ResponseEntity
@@ -45,7 +45,6 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer userId) {
-
         this.userFacade.deleteUser(userId);
 
         return ResponseEntity

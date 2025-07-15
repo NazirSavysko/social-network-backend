@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdateMessagePayload;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
@@ -41,7 +40,6 @@ public final class MessageController {
     public @NotNull ResponseEntity<?> updateMessage(@PathVariable("messageId") Integer messageId,
                                                      final @RequestBody UpdateMessagePayload content,
                                                     final BindingResult result) {
-
         final UpdateMessageDTO updateMessageDTO = new UpdateMessageDTO(messageId, content.content());
         final GetMessageDTO updatedMessage = this.messageFacade.updateMessage(updateMessageDTO, result);
 
@@ -51,7 +49,6 @@ public final class MessageController {
 
     @DeleteMapping("/delete")
     public @NotNull ResponseEntity<?> deleteMessage(@PathVariable("messageId") Integer messageId) {
-
         this.messageFacade.deleteMessage(messageId);
 
         return ResponseEntity

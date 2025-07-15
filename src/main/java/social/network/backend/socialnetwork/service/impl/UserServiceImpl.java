@@ -10,14 +10,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserById(final Integer id) {
+
         return Optional.of(
                 User.builder()
                         .id(id)
                         .build()
         );
     }
-
-
 
     @Override
     public void deleteUser(final Integer id) {
@@ -26,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(final String email, final String name, final String surname, final String password) {
+
         return User.builder()
                 .id(1)
                 .email(email)
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(final Integer id, final String email, final String name, final String surname, final String password) {
+
         return User.builder()
                 .id(id)
                 .email(email)

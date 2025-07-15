@@ -31,6 +31,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getAllMessagesByUserId(final Integer userId) {
+
         return List.of(
                 Message.builder()
                         .sender(User.builder().build())

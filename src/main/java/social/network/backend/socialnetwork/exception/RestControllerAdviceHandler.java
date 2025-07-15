@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public final class RestControllerAdviceHandler {
@@ -16,7 +16,8 @@ public final class RestControllerAdviceHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public @NotNull ResponseEntity<?> handleIllegalArgumentException(@NotNull IllegalArgumentException e) {
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity
+                .badRequest()
                 .body(e.getMessage());
     }
 

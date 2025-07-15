@@ -26,8 +26,8 @@ public final class MessagesController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createMessage(final @RequestBody CreateMessageDTO createMessageDTO,
-                                           final BindingResult result, final UriComponentsBuilder uriComponentsBuilder) {
-
+                                           final BindingResult result,
+                                           final UriComponentsBuilder uriComponentsBuilder) {
         final GetMessageDTO createdMessage = this.messageFacade.createMessage(createMessageDTO, result);
 
         return ResponseEntity
@@ -40,7 +40,6 @@ public final class MessagesController {
 
     @GetMapping("/user/{userId:\\d+}")
     public ResponseEntity<?> getByUserId(@PathVariable("userId") Integer userId) {
-
         final List<GetMessageDTO> messages = this.messageFacade.getAllMessagesByUserId(userId);
 
         return ResponseEntity
