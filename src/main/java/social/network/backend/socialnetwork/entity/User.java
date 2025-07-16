@@ -38,7 +38,7 @@ public final class User {
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "sender", cascade = ALL)
     private List<Message> messages;
 
 }
