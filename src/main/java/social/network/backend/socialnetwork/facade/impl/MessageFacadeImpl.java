@@ -4,10 +4,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import social.network.backend.socialnetwork.dto.message.CreateMessageDTO;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
 import social.network.backend.socialnetwork.dto.message.UpdateMessageDTO;
@@ -15,21 +13,25 @@ import social.network.backend.socialnetwork.entity.Message;
 import social.network.backend.socialnetwork.facade.MessageFacade;
 import social.network.backend.socialnetwork.facade.mapper.Mapper;
 import social.network.backend.socialnetwork.service.MessageService;
+import social.network.backend.socialnetwork.validation.DtoValidator;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static social.network.backend.socialnetwork.validation.ValidationMessage.ERROR_MESSAGE_ID_MUST_BE_POSITIVE;
+import static social.network.backend.socialnetwork.validation.ValidationMessage.ERROR_USER_ID_MUST_BE_POSITIVE;
 
 @Component
 public final class MessageFacadeImpl implements MessageFacade {
 
     private final MessageService messageService;
     private final Mapper<Message, GetMessageDTO> messageMapper;
-    private final Validator validator;
+    private final DtoValidator validator;
 
     @Autowired
     public MessageFacadeImpl(final MessageService messageService,
                              final Mapper<Message, GetMessageDTO> messageMapper,
-                             final  Validator validator) {
+                             final DtoValidator validator) {
         this.messageService = messageService;
         this.messageMapper = messageMapper;
         this.validator = validator;
@@ -37,57 +39,48 @@ public final class MessageFacadeImpl implements MessageFacade {
 
 
     @Override
-    public GetMessageDTO createMessage(final CreateMessageDTO createMessageDTO, @NotNull final BindingResult result) {
+    public GetMessageDTO createMessage(final @NotNull CreateMessageDTO createMessageDTO,
+                                       final @NotNull BindingResult result) {
         validator.validate(createMessageDTO, result);
-        if (result.hasErrors()) {
-            throw new IllegalArgumentException(
-                    "Validation errors occurred: " + result.getAllErrors().stream()
-                            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                            .reduce((msg1, msg2) -> msg1 + ", " + msg2)
-                            .orElse("Unknown error")
-            );
-        } else {
-            final Message savedMessage = this.messageService.createMessage(createMessageDTO.content(), createMessageDTO.senderId(), createMessageDTO.receiverId());
 
-            return this.messageMapper.toDto(savedMessage);
-        }
+        final Message savedMessage = this.messageService.createMessage(
+                createMessageDTO.content(),
+                createMessageDTO.senderId(),
+                createMessageDTO.receiverId()
+        );
+
+        return this.messageMapper.toDto(savedMessage);
+
     }
 
     @Override
-    public GetMessageDTO updateMessage( final UpdateMessageDTO dtoForUpdate, @NotNull final BindingResult result) {
+    public GetMessageDTO updateMessage(final @NotNull UpdateMessageDTO dtoForUpdate,
+                                       final @NotNull BindingResult result) {
         validator.validate(dtoForUpdate, result);
-        if (result.hasErrors()) {
-            throw new IllegalArgumentException(
-                    "Validation errors occurred: " + result.getAllErrors().stream()
-                            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                            .reduce((msg1, msg2) -> msg1 + ", " + msg2)
-                            .orElse("Unknown error")
-            );
-        } else {
-            final Message updatedMessage = this.messageService.updateMessage(dtoForUpdate.id(), dtoForUpdate.content());
 
-            return this.messageMapper.toDto(updatedMessage);
-        }
+        final Message updatedMessage = this.messageService.updateMessage(
+                dtoForUpdate.id(),
+                dtoForUpdate.content()
+        );
+
+        return this.messageMapper.toDto(updatedMessage);
     }
 
     @Override
     public GetMessageDTO getMessageById(final Integer messageId) {
-        if (messageId == null || messageId <= 0) {
-            throw new IllegalArgumentException("Message ID must be a positive integer.");
-        } else {
-            final Message message = this.messageService.getMessageById(messageId).orElseThrow(
-                            () -> new NoSuchElementException("Message with ID " + messageId + " not found.")
-            );
+        this.validateMessageId(messageId);
 
-            return this.messageMapper.toDto(message);
-        }
+        final Message message = this.messageService.getMessageById(messageId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Message with ID " + messageId + " not found.")
+                );
+
+        return this.messageMapper.toDto(message);
     }
 
     @Override
     public void deleteMessage(final Integer messageId) {
-        if (messageId == null || messageId <= 0) {
-            throw new IllegalArgumentException("Message ID must be a positive integer.");
-        }
+        this.validateMessageId(messageId);
 
         this.messageService.deleteMessage(messageId);
     }
@@ -95,9 +88,18 @@ public final class MessageFacadeImpl implements MessageFacade {
     @Contract(pure = true)
     @Override
     public @NotNull @Unmodifiable List<GetMessageDTO> getAllMessagesByUserId(final Integer userId) {
+        if (userId == null || userId <= 0) {
+            throw new IllegalArgumentException(ERROR_USER_ID_MUST_BE_POSITIVE);
+        }
 
         return this.messageService.getAllMessagesByUserId(userId).stream()
                 .map(this.messageMapper::toDto)
                 .toList();
+    }
+
+    private void validateMessageId(final Integer messageId) {
+        if (messageId == null || messageId <= 0) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_ID_MUST_BE_POSITIVE);
+        }
     }
 }

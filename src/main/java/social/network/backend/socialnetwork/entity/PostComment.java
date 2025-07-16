@@ -1,13 +1,11 @@
 package social.network.backend.socialnetwork.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -16,17 +14,18 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public final class post_comment {
+@Builder
+public final class PostComment {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 

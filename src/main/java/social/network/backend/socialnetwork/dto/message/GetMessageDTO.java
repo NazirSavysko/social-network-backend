@@ -1,11 +1,12 @@
 package social.network.backend.socialnetwork.dto.message;
 
-import social.network.backend.socialnetwork.dto.user.GetUserDTO;
+
+import social.network.backend.socialnetwork.dto.user.UserShortDTO;
 
 public record GetMessageDTO(
         Integer id,
         String content,
-        GetUserDTO sender,
-        GetUserDTO receiver
+        UserShortDTO sender,
+        UserShortDTO receiver
 ) {
 }

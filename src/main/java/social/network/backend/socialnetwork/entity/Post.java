@@ -1,13 +1,13 @@
 package social.network.backend.socialnetwork.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -16,6 +16,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public final class Post {
 
     @Id
@@ -26,12 +27,17 @@ public final class Post {
 
     private LocalDateTime postDate;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
+    private List<PostLike> postLikes;
+
+    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = ALL)
+    private List<PostComment> postComments;
 }

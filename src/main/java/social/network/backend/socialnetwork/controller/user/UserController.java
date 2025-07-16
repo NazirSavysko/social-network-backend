@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import social.network.backend.socialnetwork.controller.payload.UpdateUserPayload;
 import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
 import social.network.backend.socialnetwork.facade.UserFacade;
 
 @RestController
 @RequestMapping("/api/v1/users/{userId:\\d+}")
-public class UserController {
+public final class UserController {
 
     private final UserFacade userFacade;
 
@@ -35,8 +36,16 @@ public class UserController {
 
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO,
+    public ResponseEntity<?> updateUser(final @PathVariable("userId") Integer userId,
+                                        final @RequestBody UpdateUserPayload updateUserPayload,
                                         final BindingResult result) {
+        final UpdateUserDTO updateUserDTO = new UpdateUserDTO(
+                userId,
+                updateUserPayload.name(),
+                updateUserPayload.surname(),
+                updateUserPayload.email(),
+                updateUserPayload.password()
+        );
         final GetUserDTO updatedUser = this.userFacade.updateUser(updateUserDTO, result);
 
         return ResponseEntity

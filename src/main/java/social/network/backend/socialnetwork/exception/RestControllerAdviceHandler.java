@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 @RestControllerAdvice
 public final class RestControllerAdviceHandler {
 
@@ -24,15 +22,24 @@ public final class RestControllerAdviceHandler {
     @ExceptionHandler(SQLException.class)
     public @NotNull ResponseEntity<?> handleSQLException(@NotNull SQLException e) {
 
-        return ResponseEntity.internalServerError()
-                .body("An unexpected error occurred: " + e.getMessage());
+        return ResponseEntity
+                .internalServerError()
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public @NotNull ResponseEntity<?> handleNoSuchElementException(@NotNull NoSuchElementException e) {
+    public @NotNull ResponseEntity<?> handleNoSuchElementException() {
 
         return ResponseEntity
-                .status(NOT_FOUND)
+                .notFound()
+                .build();
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public @NotNull ResponseEntity<?> handleNullPointer(@NotNull NullPointerException e) {
+
+        return ResponseEntity
+                .badRequest()
                 .body(e.getMessage());
     }
 

@@ -1,21 +1,25 @@
 package social.network.backend.socialnetwork.service.impl;
 
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.service.UserService;
 
 import java.util.Optional;
 
-@Service
-public class UserServiceImpl implements UserService {
-    @Override
-    public Optional<User> getUserById(final Integer id) {
+import static java.util.Optional.of;
+import static social.network.backend.socialnetwork.utils.EntityDtoFactory.createUserEntity;
 
-        return Optional.of(
-                User.builder()
-                        .id(id)
-                        .build()
-        );
+@Service
+public final class UserServiceImpl implements UserService {
+
+    @Contract("_ -> new")
+    @Override
+    public @NotNull Optional<User> getUserById(final Integer id) {
+
+        return of(createUserEntity());
     }
 
     @Override
@@ -26,24 +30,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(final String email, final String name, final String surname, final String password) {
 
-        return User.builder()
-                .id(1)
-                .email(email)
-                .name(name)
-                .surname(surname)
-                .password(password)
-                .build();
+        return createUserEntity();
     }
 
     @Override
     public User updateUser(final Integer id, final String email, final String name, final String surname, final String password) {
 
-        return User.builder()
-                .id(id)
-                .email(email)
-                .name(name)
-                .surname(surname)
-                .password(password)
-                .build();
+        return createUserEntity();
     }
 }

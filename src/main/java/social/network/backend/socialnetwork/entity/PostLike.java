@@ -1,10 +1,7 @@
 package social.network.backend.socialnetwork.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -15,17 +12,18 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public final class PostLike {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 

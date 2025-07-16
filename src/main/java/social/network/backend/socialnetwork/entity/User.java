@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import social.network.backend.socialnetwork.entity.enums.Role;
 
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -31,4 +34,11 @@ public final class User {
 
     @Enumerated(value = STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Message> messages;
+
 }

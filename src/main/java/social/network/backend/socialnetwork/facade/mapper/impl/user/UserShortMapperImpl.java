@@ -1,21 +1,19 @@
-package social.network.backend.socialnetwork.facade.mapper.impl;
+package social.network.backend.socialnetwork.facade.mapper.impl.user;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import social.network.backend.socialnetwork.dto.user.GetUserDTO;
+import social.network.backend.socialnetwork.dto.user.UserShortDTO;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.facade.mapper.Mapper;
 
-
-@Component("userMapper")
-public final class UserMapperImpl implements Mapper<User, GetUserDTO> {
+@Component
+public final class UserShortMapperImpl implements Mapper<User, UserShortDTO> {
 
     @Contract("_ -> new")
     @Override
-    public @NotNull GetUserDTO toDto(final @NotNull User entity) {
-
-        return new GetUserDTO(
+    public @NotNull UserShortDTO toDto(@NotNull User entity) {
+        return new UserShortDTO(
                 entity.getId(),
                 entity.getName(),
                 entity.getSurname(),
