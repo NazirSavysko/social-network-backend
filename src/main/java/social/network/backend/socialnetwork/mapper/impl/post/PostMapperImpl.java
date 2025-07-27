@@ -1,37 +1,31 @@
-package social.network.backend.socialnetwork.facade.mapper.impl.post;
+package social.network.backend.socialnetwork.mapper.impl.post;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import social.network.backend.socialnetwork.dto.image.GetImageDTO;
-import social.network.backend.socialnetwork.dto.post.GetPostCommentDTO;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
-import social.network.backend.socialnetwork.dto.post.GetPostLikeDTO;
-import social.network.backend.socialnetwork.entity.Image;
+import social.network.backend.socialnetwork.dto.post_comment.GetPostCommentDTO;
+import social.network.backend.socialnetwork.dto.post_like.GetPostLikeDTO;
 import social.network.backend.socialnetwork.entity.Post;
 import social.network.backend.socialnetwork.entity.PostComment;
 import social.network.backend.socialnetwork.entity.PostLike;
-import social.network.backend.socialnetwork.facade.mapper.Mapper;
+import social.network.backend.socialnetwork.mapper.Mapper;
 
+import static social.network.backend.socialnetwork.utils.FileWriter.getContentFromFile;
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapCollection;
-import static social.network.backend.socialnetwork.utils.MapperUtils.mapDto;
-
 @Component
 public final class PostMapperImpl implements Mapper<Post, GetPostDTO> {
 
     private final Mapper<PostComment, GetPostCommentDTO> postCommentMapper;
     private final Mapper<PostLike, GetPostLikeDTO> postLikeMapper;
-    private final Mapper<Image, GetImageDTO> imageMapper;
 
 
     @Autowired
     public PostMapperImpl(final Mapper<PostComment, GetPostCommentDTO> postCommentMapper,
-                          final Mapper<PostLike, GetPostLikeDTO> postLikeMapper
-            , final Mapper<Image, GetImageDTO> imageMapper) {
+                          final Mapper<PostLike, GetPostLikeDTO> postLikeMapper) {
         this.postCommentMapper = postCommentMapper;
         this.postLikeMapper = postLikeMapper;
-        this.imageMapper = imageMapper;
     }
 
     @Contract("_ -> new")
@@ -43,7 +37,7 @@ public final class PostMapperImpl implements Mapper<Post, GetPostDTO> {
                 entity.getPostText(),
                 entity.getPostDate(),
                 entity.getId(),
-                mapDto(entity.getImage(), this.imageMapper::toDto)
+                getContentFromFile(entity.getImage().getFilePath())
         );
     }
 }

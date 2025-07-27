@@ -1,4 +1,4 @@
-package social.network.backend.socialnetwork.facade.mapper;
+package social.network.backend.socialnetwork.mapper;
 
 
 @FunctionalInterface

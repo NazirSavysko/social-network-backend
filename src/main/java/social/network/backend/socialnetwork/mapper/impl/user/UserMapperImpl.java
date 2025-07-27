@@ -1,4 +1,4 @@
-package social.network.backend.socialnetwork.facade.mapper.impl.user;
+package social.network.backend.socialnetwork.mapper.impl.user;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.entity.Message;
 import social.network.backend.socialnetwork.entity.Post;
 import social.network.backend.socialnetwork.entity.User;
-import social.network.backend.socialnetwork.facade.mapper.Mapper;
+import social.network.backend.socialnetwork.mapper.Mapper;
 
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapCollection;
 

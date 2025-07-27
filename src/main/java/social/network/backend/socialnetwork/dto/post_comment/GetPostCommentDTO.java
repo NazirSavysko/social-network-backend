@@ -1,4 +1,4 @@
-package social.network.backend.socialnetwork.dto.post;
+package social.network.backend.socialnetwork.dto.post_comment;
 
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
 

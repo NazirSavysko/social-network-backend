@@ -1,0 +1,80 @@
+package social.network.backend.socialnetwork.service.impl;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import social.network.backend.socialnetwork.entity.Image;
+import social.network.backend.socialnetwork.entity.Post;
+import social.network.backend.socialnetwork.entity.User;
+import social.network.backend.socialnetwork.repository.PostRepository;
+import social.network.backend.socialnetwork.repository.UserRepository;
+import social.network.backend.socialnetwork.service.PostService;
+
+import static java.time.LocalDateTime.now;
+import static social.network.backend.socialnetwork.utils.FileWriter.deleteFile;
+import static social.network.backend.socialnetwork.utils.FileWriter.writeToFile;
+
+@Service
+public class PostServiceImpl implements PostService {
+
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public PostServiceImpl(final PostRepository postRepository,final UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public Post getPostById(final int id) {
+        return this.postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+    }
+
+    @Override
+    public void deletePostById(final int id) {
+       this.postRepository.deleteById(id);
+    }
+
+    @Override
+    public @NotNull Post createPost(final Integer userId, final String imageInFormatBase64, final String postText) {
+        final User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        final Image image = this.createImage(imageInFormatBase64, user.getEmail());
+
+        final Post post = Post.builder()
+                .user(user)
+                .postText(postText)
+                .image(image)
+                .postDate(now())
+                .build();
+
+        return this.postRepository.save(post);
+    }
+
+    @Override
+    public Post updatePost(final Integer id, final String imageInFormatBase64, final String text) {
+        final Post post = this.postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        final Image image = this.createImage(imageInFormatBase64, post.getUser().getEmail());
+
+        final String filePath = post.getImage().getFilePath();
+        deleteFile(filePath);
+
+        post.setImage(image);
+        post.setPostText(text);
+
+        return this.postRepository.save(post);
+    }
+
+    private Image createImage(final String imageInFormatBase64,final String directory) {
+        final String filePath = writeToFile(directory, imageInFormatBase64);
+
+        return Image.builder()
+                .filePath(filePath)
+                .build();
+    }
+}

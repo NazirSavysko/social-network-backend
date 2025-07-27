@@ -1,14 +1,14 @@
-package social.network.backend.socialnetwork.facade.mapper.impl.post;
+package social.network.backend.socialnetwork.mapper.impl.post;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import social.network.backend.socialnetwork.dto.post.GetPostCommentDTO;
+import social.network.backend.socialnetwork.dto.post_comment.GetPostCommentDTO;
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
 import social.network.backend.socialnetwork.entity.PostComment;
 import social.network.backend.socialnetwork.entity.User;
-import social.network.backend.socialnetwork.facade.mapper.Mapper;
+import social.network.backend.socialnetwork.mapper.Mapper;
 
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapDto;
 

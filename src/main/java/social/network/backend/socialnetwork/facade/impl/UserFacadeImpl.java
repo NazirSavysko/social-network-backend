@@ -9,14 +9,13 @@ import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.facade.UserFacade;
-import social.network.backend.socialnetwork.facade.mapper.Mapper;
+import social.network.backend.socialnetwork.mapper.Mapper;
 import social.network.backend.socialnetwork.service.UserService;
 import social.network.backend.socialnetwork.validation.DtoValidator;
 
 import java.util.NoSuchElementException;
 
 import static java.lang.String.format;
-import static social.network.backend.socialnetwork.validation.ValidationMessage.ERROR_USER_ID_MUST_BE_POSITIVE;
 
 @Component
 public final class UserFacadeImpl implements UserFacade {
@@ -36,7 +35,6 @@ public final class UserFacadeImpl implements UserFacade {
 
     @Override
     public GetUserDTO getUserById(final Integer userId) {
-        this.validateUserId(userId);
 
         final User user = this.userService.getUserById(userId)
                 .orElseThrow(() ->
@@ -80,14 +78,6 @@ public final class UserFacadeImpl implements UserFacade {
 
     @Override
     public void deleteUser(final Integer id) {
-        this.validateUserId(id);
-
         this.userService.deleteUser(id);
-    }
-
-    private void validateUserId(Integer userId) {
-        if (userId == null || userId <= 0) {
-            throw new IllegalArgumentException(ERROR_USER_ID_MUST_BE_POSITIVE);
-        }
     }
 }

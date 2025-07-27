@@ -12,6 +12,9 @@ import social.network.backend.socialnetwork.facade.MessageFacade;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.ok;
+
 
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -30,8 +33,7 @@ public final class MessagesController {
                                            final UriComponentsBuilder uriComponentsBuilder) {
         final GetMessageDTO createdMessage = this.messageFacade.createMessage(createMessageDTO, result);
 
-        return ResponseEntity
-                .created(uriComponentsBuilder
+        return created(uriComponentsBuilder
                         .replacePath("/api/v1/messages/{messageId}")
                         .build(Map.of("messageId", createdMessage.id()))
                 )
@@ -42,8 +44,7 @@ public final class MessagesController {
     public ResponseEntity<?> getByUserId(@PathVariable("userId") Integer userId) {
         final List<GetMessageDTO> messages = this.messageFacade.getAllMessagesByUserId(userId);
 
-        return ResponseEntity
-                .ok()
+        return ok()
                 .body(messages);
     }
 }
