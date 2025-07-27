@@ -12,7 +12,7 @@ import social.network.backend.socialnetwork.entity.PostComment;
 import social.network.backend.socialnetwork.entity.PostLike;
 import social.network.backend.socialnetwork.mapper.Mapper;
 
-import static social.network.backend.socialnetwork.utils.FileWriter.getContentFromFile;
+import static social.network.backend.socialnetwork.utils.FileUtils.getContentFromFile;
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapCollection;
 @Component
 public final class PostMapperImpl implements Mapper<Post, GetPostDTO> {

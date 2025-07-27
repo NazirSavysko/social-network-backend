@@ -34,7 +34,7 @@ class PostController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updatePost(final @ModelAttribute("post") UpdatePostDTO post,
+    public ResponseEntity<?> updatePost(final  UpdatePostDTO post,
                                         final BindingResult result){
 
         final GetPostDTO updatedPost = this.postFacade.updatePost(post,result);

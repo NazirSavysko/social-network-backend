@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.server.ServerErrorException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.lang.System.currentTimeMillis;
@@ -11,18 +12,22 @@ import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 import static java.util.UUID.randomUUID;
 
-public final class FileWriter {
+public final class FileUtils {
 
 
     private static final String THE_SOURCE_DIRECTORY = "D:\\images";
+    private static final String SUFFIX = ".txt";
 
-    private FileWriter() {
+    private FileUtils() {
     }
 
     public static @NotNull String writeToFile(final String directoryName,final String content) {
         try {
-            createDirectories(get(THE_SOURCE_DIRECTORY, directoryName));
-            final Path path = writeString(get(directoryName, generateFileName()), content);
+
+            final Path directoryPath = createDirectories(get(THE_SOURCE_DIRECTORY, directoryName));
+            final Path file = Files.createTempFile(directoryPath,generateFileName(), SUFFIX);
+
+            final Path path = writeString(file, content);
 
             return path.toFile().getAbsolutePath();
         } catch (final IOException e) {
@@ -49,4 +54,5 @@ public final class FileWriter {
     private static @NotNull String generateFileName() {
         return currentTimeMillis() + "_" + randomUUID() + ".txt";
     }
+
 }

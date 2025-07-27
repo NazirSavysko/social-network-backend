@@ -2,6 +2,7 @@ package social.network.backend.socialnetwork.mapper.impl.user;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
@@ -11,6 +12,9 @@ import social.network.backend.socialnetwork.entity.Message;
 import social.network.backend.socialnetwork.entity.Post;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.mapper.Mapper;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapCollection;
 
@@ -37,8 +41,13 @@ public final class UserMapperImpl implements Mapper<User, GetUserDTO> {
                 entity.getName(),
                 entity.getSurname(),
                 entity.getEmail(),
-                mapCollection(entity.getMessages(), this.messageMapper::toDto),
+                mapCollection(joinMessages(entity), this.messageMapper::toDto),
                 mapCollection(entity.getPosts(), this.postMapper::toDto)
         );
+    }
+
+    private @NotNull @Unmodifiable List<Message> joinMessages(final @NotNull User user) {
+        return Stream.concat(user.getMessages().stream(), user.getReceivedMessages().stream())
+                .toList();
     }
 }

@@ -41,4 +41,7 @@ public final class User {
     @OneToMany(mappedBy = "sender", cascade = ALL)
     private List<Message> messages;
 
+    @OneToMany(mappedBy = "recipient", cascade = ALL)
+    private List<Message> receivedMessages;
+
 }

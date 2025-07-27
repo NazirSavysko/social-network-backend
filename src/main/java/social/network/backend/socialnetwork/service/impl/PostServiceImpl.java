@@ -11,8 +11,8 @@ import social.network.backend.socialnetwork.repository.UserRepository;
 import social.network.backend.socialnetwork.service.PostService;
 
 import static java.time.LocalDateTime.now;
-import static social.network.backend.socialnetwork.utils.FileWriter.deleteFile;
-import static social.network.backend.socialnetwork.utils.FileWriter.writeToFile;
+import static social.network.backend.socialnetwork.utils.FileUtils.deleteFile;
+import static social.network.backend.socialnetwork.utils.FileUtils.writeToFile;
 
 @Service
 public class PostServiceImpl implements PostService {
