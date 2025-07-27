@@ -51,6 +51,7 @@ public class PostServiceImpl implements PostService {
                 .postDate(now())
                 .build();
 
+        user.getPosts().add(post);
         return this.postRepository.save(post);
     }
 
