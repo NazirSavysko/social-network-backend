@@ -6,7 +6,7 @@ public final class ErrorMessages {
 
    // Post
    public static final String ERROR_POST_NOT_FOUND = "Post not found";
-   public static final String ERROR_POST_IMAGE_INVALID_FORMAT = "Post image is invalid format";
+   public static final String ERROR_POST_IMAGE_INVALID_FORMAT = "Post image is invalid format(it must be like this: data:image/png;base64,iVBO....)";
 
    //Message
    public static final String ERROR_MESSAGE_NOT_FOUND = "Message not found";

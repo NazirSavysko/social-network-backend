@@ -1,4 +1,4 @@
-package social.network.backend.socialnetwork.exception;
+package social.network.backend.socialnetwork.exception.rest_exception_handler;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import social.network.backend.socialnetwork.exception.FileStorageException;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -19,9 +20,9 @@ import static org.springframework.http.ResponseEntity.status;
 
 
 @RestControllerAdvice
-public final class RestControllerAdviceHandler {
+public final class GlobalRestControllerAdviceHandler {
 
-    private static final Logger LOGGER = getLogger(RestControllerAdviceHandler.class);
+    private static final Logger LOGGER = getLogger(GlobalRestControllerAdviceHandler.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
     public @NotNull ResponseEntity<?> handleIllegalArgumentException(final @NotNull IllegalArgumentException e) {
@@ -35,6 +36,15 @@ public final class RestControllerAdviceHandler {
     @ExceptionHandler(SQLException.class)
     public @NotNull ResponseEntity<?> handleSQLException(final @NotNull SQLException e) {
         LOGGER.error("SQLException: {}", e.getMessage(), e);
+
+        return status(INTERNAL_SERVER_ERROR)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public @NotNull ResponseEntity<?> handleFileStorage(final @NotNull FileStorageException e) {
+        LOGGER.error("FileStorageException: {}", e.getMessage(), e);
 
         return status(INTERNAL_SERVER_ERROR)
                 .contentType(APPLICATION_JSON)

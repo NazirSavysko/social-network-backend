@@ -21,9 +21,9 @@ public final class DtoValidatorImpl implements DtoValidator {
     public void validate(final Object dto,final BindingResult result) {
         validator.validate(dto, result);
         if (result.hasErrors()) {
-            String message = result.getAllErrors().stream()
+            final String message = result.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining("\n"));
 
             throw new IllegalArgumentException(message);
         }

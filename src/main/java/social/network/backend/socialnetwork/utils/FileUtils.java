@@ -1,7 +1,7 @@
 package social.network.backend.socialnetwork.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.web.server.ServerErrorException;
+import social.network.backend.socialnetwork.exception.FileStorageException;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,9 +17,7 @@ public final class FileUtils {
     private static final String THE_SOURCE_DIRECTORY = "D:\\images";
     private static final String SUFFIX = ".png";
 
-    private FileUtils() {
-
-    }
+    private FileUtils() {}
     public static @NotNull String writeToFile(String directoryName, @NotNull String content) {
         try {
             final Path dir = createDirectories(get(THE_SOURCE_DIRECTORY, directoryName));
@@ -29,8 +27,8 @@ public final class FileUtils {
 
             write(tempFile, data);
             return tempFile.toAbsolutePath().toString();
-        } catch (IOException e) {
-            throw new ServerErrorException("Error writing to file: " + directoryName, e);
+        } catch (final IOException e) {
+            throw new FileStorageException("Error writing to file: " + directoryName, e);
         }
     }
 
@@ -41,16 +39,16 @@ public final class FileUtils {
 
             final String base64 = getEncoder().encodeToString(bytes);
             return "data:" + mimeType + ";base64," + base64;
-        } catch (IOException e) {
-            throw new ServerErrorException("Error reading from file: " + filePath, e);
+        } catch (final IOException e) {
+            throw new FileStorageException("Error reading from file: " + filePath, e);
         }
     }
 
     public static void deleteFile(final String filePath) {
         try {
             deleteIfExists(get(filePath));
-        } catch (IOException e) {
-            throw new ServerErrorException("Error deleting file: " + filePath, e);
+        } catch (final IOException e) {
+            throw new FileStorageException("Error deleting file: " + filePath, e);
         }
     }
 
