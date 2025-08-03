@@ -15,6 +15,7 @@ import social.network.backend.socialnetwork.service.UserService;
 import java.util.NoSuchElementException;
 
 import static java.time.LocalDateTime.now;
+import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -48,8 +49,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public @NotNull Message createMessage(final String content, final Integer senderId, final Integer recipientId) {
-        final User sender = this.userService.getUserByIdOrTrow(senderId, "Sender user not found");
-        final User recipient = this.userService.getUserByIdOrTrow(recipientId, "Recipient user not found");
+        final User sender = this.userService.getUserByIdOrTrow(senderId, ERROR_MESSAGE_SENDER_NOT_FOUND);
+        final User recipient = this.userService.getUserByIdOrTrow(recipientId, ERROR_MESSAGE_RECIPIENT_NOT_FOUND);
 
         final Message message = Message.builder()
                 .messageText(content)
@@ -71,6 +72,6 @@ public class MessageServiceImpl implements MessageService {
 
     private Message getMessageOrTrow(final Integer messageId) {
         return this.messageRepository.findById(messageId)
-                .orElseThrow(() -> new NoSuchElementException("Message not found"));
+                .orElseThrow(() -> new NoSuchElementException(ERROR_MESSAGE_NOT_FOUND));
     }
 }

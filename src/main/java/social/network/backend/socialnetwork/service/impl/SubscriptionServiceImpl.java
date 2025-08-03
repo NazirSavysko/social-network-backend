@@ -13,6 +13,7 @@ import social.network.backend.socialnetwork.service.UserService;
 import java.util.NoSuchElementException;
 
 import static java.time.LocalDateTime.now;
+import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 
 @Service
@@ -34,11 +35,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Subscription createSubscription(final Integer subscriberId, final Integer targetId) {
-        final User subscriber = this.userService.getUserByIdOrTrow(subscriberId, "Subscriber user not found");
-        final User target = this.userService.getUserByIdOrTrow(targetId, "Target user not found");
+        final User subscriber = this.userService.getUserByIdOrTrow(subscriberId, ERROR_SUBSCRIBER_NOT_FOUND);
+        final User target = this.userService.getUserByIdOrTrow(targetId, ERROR_TARGET_NOT_FOUND);
 
         this.existsBySubscriberAndTargetIdOrTrow(subscriberId, targetId);
-        Subscription subscription = Subscription.builder()
+        final Subscription subscription = Subscription.builder()
                 .subscriber(subscriber)
                 .target(target)
                 .subscribedAt(now())
@@ -51,8 +52,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Subscription updateSubscription(final Integer id, final Integer subscriberId, final Integer targetId) {
         final Subscription subscription = this.getSubscriptionByIdOrThrow(id);
 
-        final User subscriber = this.userService.getUserByIdOrTrow(subscriberId, "Subscriber user not found");
-        final User target = this.userService.getUserByIdOrTrow(targetId, "Target user not found");
+        final User subscriber = this.userService.getUserByIdOrTrow(subscriberId, ERROR_SUBSCRIBER_NOT_FOUND);
+        final User target = this.userService.getUserByIdOrTrow(targetId, ERROR_TARGET_NOT_FOUND);
 
         subscription.setSubscriber(subscriber);
         subscription.setTarget(target);
@@ -91,12 +92,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private Subscription getSubscriptionByIdOrThrow(final Integer subscriptionId) {
         return this.subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new NoSuchElementException("Subscription not found"));
+                .orElseThrow(() -> new NoSuchElementException(ERROR_SUBSCRIPTION_NOT_FOUND));
     }
 
     private void existsBySubscriberAndTargetIdOrTrow(final Integer subscriberId, final Integer targetId) {
         if (this.subscriptionRepository.existsBySubscriber_IdAndTarget_Id(subscriberId, targetId)) {
-            throw new IllegalArgumentException("Subscription already exists between these users");
+            throw new IllegalArgumentException(ERROR_SUBSCRIPTION_ALREADY_EXISTS);
         }
     }
 }

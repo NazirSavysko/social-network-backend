@@ -32,7 +32,7 @@ public final class PostMapperImpl implements Mapper<Post, GetPostDTO> {
                 entity.getPostText(),
                 entity.getPostDate(),
                 entity.getId(),
-                getContentFromFile(entity.getImage().getFilePath())
+                getContentFromFile(entity.getImage().getFilePath(),entity.getImage().getMimeType())
         );
     }
 }

@@ -1,6 +1,5 @@
 package social.network.backend.socialnetwork.service.impl;
 
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static social.network.backend.socialnetwork.entity.enums.Role.ROLE_USER;
-
+import static social.network.backend.socialnetwork.validation.ErrorMessages.ERROR_USER_NOT_FOUND;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Contract("_ -> new")
     @Override
     public @NotNull User getUserById(final Integer id) {
-        return this.getUserByIdOrTrow(id, "User not found");
+        return this.getUserByIdOrTrow(id, ERROR_USER_NOT_FOUND);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull User updateUser(final Integer id, final String email, final String name, final String surname, final String password) {
-      final User user = this.getUserByIdOrTrow(id, "User not found");
+        final User user = this.getUserByIdOrTrow(id, ERROR_USER_NOT_FOUND);
 
         user.setEmail(email);
         user.setName(name);
@@ -65,14 +64,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  void isUserExistByIdOrThrow(final Integer id) {
+    public void isUserExistByIdOrThrow(final Integer id) {
         if (!this.userRepository.existsById(id)) {
-            throw new IllegalArgumentException("User not found");
+            throw new NoSuchElementException(ERROR_USER_NOT_FOUND);
         }
     }
 
     @Override
-    public User getUserByIdOrTrow(final Integer userId, final String errorMessage){
+    public User getUserByIdOrTrow(final Integer userId, final String errorMessage) {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(errorMessage));
     }

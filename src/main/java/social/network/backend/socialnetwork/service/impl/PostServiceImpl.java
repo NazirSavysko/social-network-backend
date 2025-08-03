@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static java.time.LocalDateTime.now;
-import static java.util.Base64.getDecoder;
 import static social.network.backend.socialnetwork.utils.FileUtils.deleteFile;
 import static social.network.backend.socialnetwork.utils.FileUtils.writeToFile;
+import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public @NotNull Post createPost(final Integer userId, final String imageInFormatBase64, final String postText) {
-        final User user = this.userService.getUserByIdOrTrow(userId, "User not found");
+        final User user = this.userService.getUserByIdOrTrow(userId, ERROR_USER_NOT_FOUND);
 
         final Image image = this.createImage(imageInFormatBase64, user.getEmail());
 
@@ -82,21 +82,24 @@ public class PostServiceImpl implements PostService {
     }
 
     private Image createImage(final @NotNull String imageInFormatBase64, final String directory) {
-        String base64 = imageInFormatBase64;
-        if (base64.startsWith("data:")) {
-            base64 = base64.substring(base64.indexOf(',') + 1);
+        final int startIndex = imageInFormatBase64.indexOf(":") - 1;
+        final int endIndex = imageInFormatBase64.indexOf(",");
+        if (startIndex < 0 || endIndex < 0) {
+            throw new IllegalArgumentException(ERROR_POST_IMAGE_INVALID_FORMAT);
         }
-        final byte[] data = getDecoder().decode(base64);
 
-        final String filePath = writeToFile(directory, data);
+        final String mineType = imageInFormatBase64.substring(startIndex, endIndex);
+        final String imageData = imageInFormatBase64.substring(endIndex + 1);
+        final String filePath = writeToFile(directory, imageData);
 
         return Image.builder()
                 .filePath(filePath)
+                .mimeType(mineType)
                 .build();
     }
 
     private Post getPostByIdOrThrow(final Integer postId) {
         return this.postRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchElementException("Post not found"));
+                .orElseThrow(() -> new NoSuchElementException(ERROR_POST_NOT_FOUND));
     }
 }
