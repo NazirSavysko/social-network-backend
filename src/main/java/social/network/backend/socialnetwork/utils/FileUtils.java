@@ -6,6 +6,7 @@ import social.network.backend.socialnetwork.exception.FileStorageException;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
@@ -15,13 +16,14 @@ import static java.util.UUID.randomUUID;
 
 public final class FileUtils {
     private static final String THE_SOURCE_DIRECTORY = "D:\\images";
-    private static final String SUFFIX = ".png";
+    private static final String FORMAT_IMAGE_IN_BASE64 = "data:image/%s;base64,%s";
+
 
     private FileUtils() {}
-    public static @NotNull String writeToFile(String directoryName, @NotNull String content) {
+    public static @NotNull String writeToFile(String directoryName, @NotNull String content,final String suffix) {
         try {
             final Path dir = createDirectories(get(THE_SOURCE_DIRECTORY, directoryName));
-            final Path tempFile = createTempFile(dir, generateFileName(), SUFFIX);
+            final Path tempFile = createTempFile(dir, generateFileName(), suffix);
 
             final byte[] data = getDecoder().decode(content);
 
@@ -32,13 +34,15 @@ public final class FileUtils {
         }
     }
 
-    public static @NotNull String getContentFromFile(String filePath, final String mimeType) {
+    public static @NotNull String getContentFromFile(String filePath) {
         try {
             final Path path = get(filePath);
             final byte[] bytes = readAllBytes(path);
+            final String suffix = path.getFileName().toString().substring(path.getFileName().toString().lastIndexOf(".") + 1);
 
             final String base64 = getEncoder().encodeToString(bytes);
-            return "data:" + mimeType + ";base64," + base64;
+
+            return format(FORMAT_IMAGE_IN_BASE64, suffix, base64);
         } catch (final IOException e) {
             throw new FileStorageException("Error reading from file: " + filePath, e);
         }

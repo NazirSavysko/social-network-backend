@@ -10,8 +10,12 @@ import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.post.UpdatePostDTO;
 import social.network.backend.socialnetwork.facade.PostFacade;
 
-import static org.springframework.http.ResponseEntity.noContent;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/posts/{postId:\\d+}")
@@ -54,6 +58,8 @@ class PostController {
     public ResponseEntity<?> deletePost(final @ModelAttribute(value = "post",binding = false) GetPostDTO post) {
         this.postFacade.deletePost(post.id());
 
-        return noContent().build();
+        return status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(Map.of("message", "Post with id >" + post.id() + "< has been deleted"));
     }
 }

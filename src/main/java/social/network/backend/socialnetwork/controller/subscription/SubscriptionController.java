@@ -9,8 +9,12 @@ import social.network.backend.socialnetwork.dto.subscription.GetSubscriptionDTO;
 import social.network.backend.socialnetwork.dto.subscription.UpdateSubscriptionDTO;
 import social.network.backend.socialnetwork.facade.SubscriptionFacade;
 
-import static org.springframework.http.ResponseEntity.noContent;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/subscriptions/{subscriptionId:\\d+}")
@@ -55,6 +59,8 @@ public final class SubscriptionController {
             final @ModelAttribute(value = "subscription", binding = false) GetSubscriptionDTO subscription) {
         this.subscriptionFacade.deleteSubscription(subscription.id());
 
-        return noContent().build();
+        return status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(Map.of("message", "Subscription with id >" + subscription.id() + "< has been deleted"));
     }
 }

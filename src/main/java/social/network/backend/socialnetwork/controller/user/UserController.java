@@ -9,8 +9,12 @@ import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
 import social.network.backend.socialnetwork.facade.UserFacade;
 
-import static org.springframework.http.ResponseEntity.noContent;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/users/{userId:\\d+}")
@@ -54,7 +58,9 @@ public final class UserController {
     public ResponseEntity<?> deleteUser(final @ModelAttribute(value = "user", binding = false) GetUserDTO user) {
         this.userFacade.deleteUser(user.id());
 
-        return noContent().build();
+        return status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(Map.of("message", "User with id >" + user.id() + "< has been deleted"));
     }
 
 }

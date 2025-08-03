@@ -27,7 +27,7 @@ public final class Post {
 
     private LocalDateTime postDate;
 
-    @OneToOne(fetch = LAZY, cascade = ALL)
+    @OneToOne(cascade = ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 

@@ -5,4 +5,5 @@ import social.network.backend.socialnetwork.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    boolean existsByEmail(String email);
 }

@@ -6,5 +6,5 @@ Database diagram available at: [Database Schema](https://drive.google.com/file/d
 
 ## API Testing
 
-Use Postman collection: [Social Network API.postman_collection.json](Social%20Network%20API.postman_collection.json)
+Use Postman collection: [Social Network.postman_collection.json](Social%20Network%20API.postman_collection.json)
 

@@ -82,19 +82,19 @@ public class PostServiceImpl implements PostService {
     }
 
     private Image createImage(final @NotNull String imageInFormatBase64, final String directory) {
-        final int startIndex = imageInFormatBase64.indexOf(":") - 1;
-        final int endIndex = imageInFormatBase64.indexOf(",");
-        if (startIndex < 0 || endIndex < 0) {
+        final int startIndex = imageInFormatBase64.indexOf(":") + 1;
+        final int endIndex = imageInFormatBase64.indexOf(";");
+        final String mineType = imageInFormatBase64.substring(startIndex, endIndex);
+        if (!mineType.equals("image/jpeg") && !mineType.equals("image/png") && !mineType.equals("image/gif")) {
             throw new IllegalArgumentException(ERROR_POST_IMAGE_INVALID_FORMAT);
         }
 
-        final String mineType = imageInFormatBase64.substring(startIndex, endIndex);
-        final String imageData = imageInFormatBase64.substring(endIndex + 1);
-        final String filePath = writeToFile(directory, imageData);
+        final String suffix = "." + mineType.substring(mineType.indexOf("/") + 1);
+        final String imageData = imageInFormatBase64.substring(imageInFormatBase64.indexOf(",") + 1);
+        final String filePath = writeToFile(directory, imageData, suffix);
 
         return Image.builder()
                 .filePath(filePath)
-                .mimeType(mineType)
                 .build();
     }
 

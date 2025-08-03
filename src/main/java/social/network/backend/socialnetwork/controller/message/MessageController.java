@@ -12,8 +12,12 @@ import social.network.backend.socialnetwork.dto.message.UpdateMessageDTO;
 import social.network.backend.socialnetwork.facade.MessageFacade;
 import social.network.backend.socialnetwork.facade.impl.MessageFacadeImpl;
 
-import static org.springframework.http.ResponseEntity.noContent;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 
 @RestController
@@ -52,7 +56,9 @@ public final class MessageController {
     public @NotNull ResponseEntity<?> deleteMessage(final @ModelAttribute(value = "message", binding = false) GetMessageDTO message) {
         this.messageFacade.deleteMessage(message.id());
 
-        return noContent().build();
+        return status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(Map.of("message",">" + message.id() + "< has been deleted"));
     }
 
 }
