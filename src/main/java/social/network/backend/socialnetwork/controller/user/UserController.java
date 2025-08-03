@@ -9,6 +9,9 @@ import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
 import social.network.backend.socialnetwork.facade.UserFacade;
 
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
 @RequestMapping("/api/v1/users/{userId:\\d+}")
 public final class UserController {
@@ -21,26 +24,22 @@ public final class UserController {
     }
 
     @ModelAttribute("user")
-    public GetUserDTO getUserId(@PathVariable("userId") Integer userId) {
-
+    public GetUserDTO getUserId(final @PathVariable("userId") Integer userId) {
         return this.userFacade.getUserById(userId);
     }
 
-
     @GetMapping
-    public ResponseEntity<GetUserDTO> getUser(@ModelAttribute("user") GetUserDTO user) {
-
-        return ResponseEntity
-                .ok(user);
+    public ResponseEntity<GetUserDTO> getUser(final @ModelAttribute("user") GetUserDTO user) {
+        return ok(user);
     }
 
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(final @PathVariable("userId") Integer userId,
+    public ResponseEntity<?> updateUser(final @ModelAttribute(value = "user", binding = false) GetUserDTO user,
                                         final @RequestBody UpdateUserPayload updateUserPayload,
                                         final BindingResult result) {
         final UpdateUserDTO updateUserDTO = new UpdateUserDTO(
-                userId,
+                user.id(),
                 updateUserPayload.name(),
                 updateUserPayload.surname(),
                 updateUserPayload.email(),
@@ -48,17 +47,14 @@ public final class UserController {
         );
         final GetUserDTO updatedUser = this.userFacade.updateUser(updateUserDTO, result);
 
-        return ResponseEntity
-                .ok(updatedUser);
+        return ok(updatedUser);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer userId) {
-        this.userFacade.deleteUser(userId);
+    public ResponseEntity<?> deleteUser(final @ModelAttribute(value = "user", binding = false) GetUserDTO user) {
+        this.userFacade.deleteUser(user.id());
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return noContent().build();
     }
 
 }

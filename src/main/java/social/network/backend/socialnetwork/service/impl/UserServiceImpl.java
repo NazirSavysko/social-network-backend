@@ -9,7 +9,8 @@ import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.repository.UserRepository;
 import social.network.backend.socialnetwork.service.UserService;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static social.network.backend.socialnetwork.entity.enums.Role.ROLE_USER;
 
@@ -26,9 +27,8 @@ public class UserServiceImpl implements UserService {
 
     @Contract("_ -> new")
     @Override
-    public @NotNull Optional<User> getUserById(final Integer id) {
-
-        return this.userRepository.findById(id);
+    public @NotNull User getUserById(final Integer id) {
+        return this.getUserByIdOrTrow(id, "User not found");
     }
 
     @Override
@@ -44,16 +44,17 @@ public class UserServiceImpl implements UserService {
                 .surname(surname)
                 .password(password)
                 .role(ROLE_USER)
+                .messages(List.of())
+                .receivedMessages(List.of())
+                .posts(List.of())
                 .build();
 
         return this.userRepository.save(user);
     }
 
-
     @Override
     public @NotNull User updateUser(final Integer id, final String email, final String name, final String surname, final String password) {
-      final User user = this.userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found "));
+      final User user = this.getUserByIdOrTrow(id, "User not found");
 
         user.setEmail(email);
         user.setName(name);
@@ -61,6 +62,18 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
 
         return this.userRepository.save(user);
+    }
 
+    @Override
+    public  void isUserExistByIdOrThrow(final Integer id) {
+        if (!this.userRepository.existsById(id)) {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    @Override
+    public User getUserByIdOrTrow(final Integer userId, final String errorMessage){
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException(errorMessage));
     }
 }

@@ -1,8 +1,12 @@
 package social.network.backend.socialnetwork.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import social.network.backend.socialnetwork.entity.Post;
+
+
 
 public interface PostService {
 
@@ -17,4 +21,7 @@ public interface PostService {
 
     @Transactional(rollbackFor = Exception.class)
     Post updatePost(Integer id, String imageInFormatBase64 , String text);
+
+    @Transactional(readOnly = true)
+    Page<Post> getAllPostsByUserId(Integer userId, Pageable pageable);
 }

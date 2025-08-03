@@ -1,5 +1,7 @@
 package social.network.backend.socialnetwork.facade;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import social.network.backend.socialnetwork.dto.post.CreatePostDTO;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
@@ -13,4 +15,6 @@ public interface PostFacade {
     void deletePost(Integer id);
 
     GetPostDTO updatePost(UpdatePostDTO post, final BindingResult result);
+
+    Page<GetPostDTO> getAllPostsByUserId(Integer userId, Pageable pageable);
 }

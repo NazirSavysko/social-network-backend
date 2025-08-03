@@ -1,12 +1,11 @@
 package social.network.backend.socialnetwork.facade;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import social.network.backend.socialnetwork.dto.message.CreateMessageDTO;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
 import social.network.backend.socialnetwork.dto.message.UpdateMessageDTO;
-
-import java.util.List;
 
 
 public interface MessageFacade  {
@@ -19,5 +18,5 @@ public interface MessageFacade  {
 
     void deleteMessage(Integer messageId);
 
-    List<GetMessageDTO> getAllMessagesByUserId(Integer userId);
+    Page<GetMessageDTO> getAllMessagesByUserId(Integer userId, final Pageable pageable);
 }

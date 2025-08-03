@@ -12,6 +12,9 @@ import social.network.backend.socialnetwork.dto.message.UpdateMessageDTO;
 import social.network.backend.socialnetwork.facade.MessageFacade;
 import social.network.backend.socialnetwork.facade.impl.MessageFacadeImpl;
 
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
+
 
 @RestController
 @RequestMapping("/api/v1/messages/{messageId:\\d+}")
@@ -26,34 +29,30 @@ public final class MessageController {
 
     @ModelAttribute("message")
     public @NotNull GetMessageDTO getMessageId(@PathVariable("messageId") Integer messageId) {
-      return  this.messageFacade.getMessageById(messageId);
+        return this.messageFacade.getMessageById(messageId);
     }
 
     @GetMapping
     public @NotNull ResponseEntity<?> getMessage(@ModelAttribute("message") GetMessageDTO message) {
 
-        return ResponseEntity
-                .ok(message);
+        return ok(message);
     }
 
     @PutMapping("/update")
-    public @NotNull ResponseEntity<?> updateMessage(@PathVariable("messageId") Integer messageId,
-                                                     final @RequestBody UpdateMessagePayload content,
+    public @NotNull ResponseEntity<?> updateMessage(final @ModelAttribute(value = "message", binding = false) GetMessageDTO message,
+                                                    final @RequestBody UpdateMessagePayload content,
                                                     final BindingResult result) {
-        final UpdateMessageDTO updateMessageDTO = new UpdateMessageDTO(messageId, content.content());
+        final UpdateMessageDTO updateMessageDTO = new UpdateMessageDTO(message.id(), content.content());
         final GetMessageDTO updatedMessage = this.messageFacade.updateMessage(updateMessageDTO, result);
 
-        return ResponseEntity
-                .ok(updatedMessage);
+        return ok(updatedMessage);
     }
 
     @DeleteMapping("/delete")
-    public @NotNull ResponseEntity<?> deleteMessage(@PathVariable("messageId") Integer messageId) {
-        this.messageFacade.deleteMessage(messageId);
+    public @NotNull ResponseEntity<?> deleteMessage(final @ModelAttribute(value = "message", binding = false) GetMessageDTO message) {
+        this.messageFacade.deleteMessage(message.id());
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return noContent().build();
     }
 
 }

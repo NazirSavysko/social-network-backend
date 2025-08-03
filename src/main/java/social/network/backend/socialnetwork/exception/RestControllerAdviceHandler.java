@@ -1,47 +1,66 @@
 package social.network.backend.socialnetwork.exception;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.NoSuchElementException;
+
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.ResponseEntity.status;
+
 
 @RestControllerAdvice
 public final class RestControllerAdviceHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public @NotNull ResponseEntity<?> handleIllegalArgumentException(@NotNull IllegalArgumentException e) {
+    private static final Logger LOGGER = getLogger(RestControllerAdviceHandler.class);
 
-        return ResponseEntity
-                .badRequest()
-                .body(e.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    public @NotNull ResponseEntity<?> handleIllegalArgumentException(final @NotNull IllegalArgumentException e) {
+        LOGGER.warn("IllegalArgumentException: {}", e.getMessage(), e);
+
+        return status(BAD_REQUEST)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
     }
 
     @ExceptionHandler(SQLException.class)
-    public @NotNull ResponseEntity<?> handleSQLException(@NotNull SQLException e) {
+    public @NotNull ResponseEntity<?> handleSQLException(final @NotNull SQLException e) {
+        LOGGER.error("SQLException: {}", e.getMessage(), e);
 
-        e.printStackTrace();
-        return ResponseEntity
-                .internalServerError()
-                .body(e.getMessage());
+        return status(INTERNAL_SERVER_ERROR)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public @NotNull ResponseEntity<?> handleNoSuchElementException() {
+    public @NotNull ResponseEntity<?> handleNoSuchElementException(final @NotNull NoSuchElementException e) {
+        LOGGER.info("NoSuchElementException: {}", e.getMessage(), e);
 
-        return ResponseEntity
-                .notFound()
-                .build();
+        return status(NOT_FOUND)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public @NotNull ResponseEntity<?> handleNullPointer(@NotNull NullPointerException e) {
+    public @NotNull ResponseEntity<?> handleNullPointer(final @NotNull NullPointerException e) {
+        LOGGER.error("NullPointerException: {}", e.getMessage(), e);
 
-        return ResponseEntity
-                .badRequest()
-                .body(e.getMessage());
+        return status(BAD_REQUEST)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
     }
 
+    @Contract("_ -> new")
+    private @NotNull @Unmodifiable Map<String, String> getErrorAttributes(final @NotNull Throwable throwable) {
+        return Map.of("error", throwable.getMessage());
+    }
 }

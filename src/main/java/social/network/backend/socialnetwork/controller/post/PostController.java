@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import social.network.backend.socialnetwork.controller.payload.UpdatePostPayload;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.post.UpdatePostDTO;
 import social.network.backend.socialnetwork.facade.PostFacade;
 
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -29,23 +31,29 @@ class PostController {
 
 
     @GetMapping
-    public ResponseEntity<?> getPost(final @ModelAttribute("post") GetPostDTO post) {
+    public ResponseEntity<?> getPost(final @ModelAttribute(value = "post") GetPostDTO post) {
         return ok(post);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updatePost(final  UpdatePostDTO post,
+    public ResponseEntity<?> updatePost(final @ModelAttribute(value = "post", binding = false) GetPostDTO post,
+                                        final @RequestBody UpdatePostPayload postPayload,
                                         final BindingResult result){
 
-        final GetPostDTO updatedPost = this.postFacade.updatePost(post,result);
+        final UpdatePostDTO updatePostDTO = new UpdatePostDTO(
+                postPayload.text(),
+                postPayload.imageInFormatBase64(),
+                post.id()
+        );
+        final GetPostDTO updatedPost = this.postFacade.updatePost(updatePostDTO,result);
 
-        return ok().build();
+        return ok(updatedPost);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deletePost(final @ModelAttribute("post") GetPostDTO post) {
+    public ResponseEntity<?> deletePost(final @ModelAttribute(value = "post",binding = false) GetPostDTO post) {
         this.postFacade.deletePost(post.id());
 
-        return ok().build();
+        return noContent().build();
     }
 }

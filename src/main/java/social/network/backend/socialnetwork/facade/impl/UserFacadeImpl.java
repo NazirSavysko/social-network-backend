@@ -13,10 +13,6 @@ import social.network.backend.socialnetwork.mapper.Mapper;
 import social.network.backend.socialnetwork.service.UserService;
 import social.network.backend.socialnetwork.validation.DtoValidator;
 
-import java.util.NoSuchElementException;
-
-import static java.lang.String.format;
-
 @Component
 public final class UserFacadeImpl implements UserFacade {
 
@@ -35,14 +31,9 @@ public final class UserFacadeImpl implements UserFacade {
 
     @Override
     public GetUserDTO getUserById(final Integer userId) {
-
-        final User user = this.userService.getUserById(userId)
-                .orElseThrow(() ->
-                        new NoSuchElementException(format("User not found with userId: %d", userId))
-                );
+        final User user = this.userService.getUserById(userId);
 
         return this.userMapper.toDto(user);
-
     }
 
     @Override

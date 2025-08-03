@@ -2,8 +2,9 @@ package social.network.backend.socialnetwork.facade.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import social.network.backend.socialnetwork.dto.message.CreateMessageDTO;
@@ -14,9 +15,6 @@ import social.network.backend.socialnetwork.facade.MessageFacade;
 import social.network.backend.socialnetwork.mapper.Mapper;
 import social.network.backend.socialnetwork.service.MessageService;
 import social.network.backend.socialnetwork.validation.DtoValidator;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Component
 public final class MessageFacadeImpl implements MessageFacade {
@@ -47,7 +45,6 @@ public final class MessageFacadeImpl implements MessageFacade {
         );
 
         return this.messageMapper.toDto(savedMessage);
-
     }
 
     @Override
@@ -65,11 +62,7 @@ public final class MessageFacadeImpl implements MessageFacade {
 
     @Override
     public GetMessageDTO getMessageById(final Integer messageId) {
-
-        final Message message = this.messageService.getMessageById(messageId)
-                .orElseThrow(() ->
-                        new NoSuchElementException("Message with ID " + messageId + " not found.")
-                );
+        final Message message = this.messageService.getMessageById(messageId);
 
         return this.messageMapper.toDto(message);
     }
@@ -81,9 +74,9 @@ public final class MessageFacadeImpl implements MessageFacade {
 
     @Contract(pure = true)
     @Override
-    public @NotNull @Unmodifiable List<GetMessageDTO> getAllMessagesByUserId(final Integer userId) {
-        return this.messageService.getAllMessagesByUserId(userId).stream()
-                .map(this.messageMapper::toDto)
-                .toList();
+    public @NotNull Page<GetMessageDTO> getAllMessagesByUserId(final Integer userId, final Pageable pageable) {
+        final Page<Message> allMessagesByUserId = this.messageService.getAllMessagesByUserId(userId, pageable);
+
+        return allMessagesByUserId.map(this.messageMapper::toDto);
     }
 }

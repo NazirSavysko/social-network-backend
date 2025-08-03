@@ -25,7 +25,7 @@ public final class DtoValidatorImpl implements DtoValidator {
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.joining(", "));
 
-            throw new IllegalArgumentException("Validation failed: " + message);
+            throw new IllegalArgumentException(message);
         }
     }
 }

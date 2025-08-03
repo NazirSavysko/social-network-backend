@@ -1,6 +1,9 @@
 package social.network.backend.socialnetwork.controller.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +12,6 @@ import social.network.backend.socialnetwork.dto.message.CreateMessageDTO;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
 import social.network.backend.socialnetwork.facade.MessageFacade;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.ResponseEntity.created;
@@ -36,15 +38,14 @@ public final class MessagesController {
         return created(uriComponentsBuilder
                         .replacePath("/api/v1/messages/{messageId}")
                         .build(Map.of("messageId", createdMessage.id()))
-                )
-                .body(createdMessage);
+        ).body(createdMessage);
     }
 
     @GetMapping("/user/{userId:\\d+}")
-    public ResponseEntity<?> getByUserId(@PathVariable("userId") Integer userId) {
-        final List<GetMessageDTO> messages = this.messageFacade.getAllMessagesByUserId(userId);
+    public ResponseEntity<?> getByUserId(final @PageableDefault Pageable pageable,
+                                         final @PathVariable("userId") Integer userId) {
+        final Page<GetMessageDTO> messages = this.messageFacade.getAllMessagesByUserId(userId,pageable);
 
-        return ok()
-                .body(messages);
+        return ok(messages);
     }
 }
