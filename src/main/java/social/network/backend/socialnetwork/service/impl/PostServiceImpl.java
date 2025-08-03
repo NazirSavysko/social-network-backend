@@ -89,9 +89,8 @@ public class PostServiceImpl implements PostService {
             throw new IllegalArgumentException(ERROR_POST_IMAGE_INVALID_FORMAT);
         }
 
-        final String suffix = "." + mineType.substring(mineType.indexOf("/") + 1);
         final String imageData = imageInFormatBase64.substring(imageInFormatBase64.indexOf(",") + 1);
-        final String filePath = writeToFile(directory, imageData, suffix);
+        final String filePath = writeToFile(directory, imageData);
 
         return Image.builder()
                 .filePath(filePath)

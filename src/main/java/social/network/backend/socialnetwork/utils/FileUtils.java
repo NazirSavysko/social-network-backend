@@ -16,14 +16,15 @@ import static java.util.UUID.randomUUID;
 
 public final class FileUtils {
     private static final String THE_SOURCE_DIRECTORY = "D:\\images";
+    private static final String SUFFIX = ".txt";
     private static final String FORMAT_IMAGE_IN_BASE64 = "data:image/%s;base64,%s";
 
 
     private FileUtils() {}
-    public static @NotNull String writeToFile(String directoryName, @NotNull String content,final String suffix) {
+    public static @NotNull String writeToFile(String directoryName, @NotNull String content) {
         try {
             final Path dir = createDirectories(get(THE_SOURCE_DIRECTORY, directoryName));
-            final Path tempFile = createTempFile(dir, generateFileName(), suffix);
+            final Path tempFile = createTempFile(dir, generateFileName(), SUFFIX);
 
             final byte[] data = getDecoder().decode(content);
 

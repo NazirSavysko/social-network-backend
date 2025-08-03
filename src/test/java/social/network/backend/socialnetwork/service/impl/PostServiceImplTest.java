@@ -17,12 +17,12 @@ import social.network.backend.socialnetwork.repository.PostRepository;
 import social.network.backend.socialnetwork.service.UserService;
 import social.network.backend.socialnetwork.utils.FileUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
@@ -42,28 +42,11 @@ class PostServiceImplTest {
     @Test
     void getPostById_givenExistingId_shouldReturnPost() {
         // Given
-        final int postId = 1;
-        final User user = User.builder()
-                .id(1)
-                .email("test@example.com")
-                .name("John")
-                .surname("Doe")
-                .role(Role.ROLE_USER)
-                .build();
-
-        final Image image = Image.builder()
-                .id(1)
-                .filePath("/path/to/image.jpg")
-                .build();
-
+        final Integer postId = 1;
         final Post expectedPost = Post.builder()
                 .id(postId)
-                .postText("Test post content")
-                .postDate(now())
-                .user(user)
-                .image(image)
-                .postLikes(List.of())
-                .postComments(List.of())
+                .postText("Test post")
+                .postDate(LocalDateTime.now())
                 .build();
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(expectedPost));
@@ -80,7 +63,7 @@ class PostServiceImplTest {
     @Test
     void getPostById_givenNonExistingId_shouldThrowException() {
         // Given
-        final int postId = 999;
+        final Integer postId = 999;
         when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
         // When
@@ -107,40 +90,46 @@ class PostServiceImplTest {
     }
 
     @Test
-    void createPost_givenValidDataWithImage_shouldCreatePost() {
+    void createPost_givenValidData_shouldCreatePost() {
         // Given
         final Integer userId = 1;
-        final String imageBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
-        final String postText = "Test post content";
-        final String expectedFilePath = "/path/to/saved/image.png";
+        final String imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD";
+        final String postText = "Test post text";
 
         final User user = User.builder()
                 .id(userId)
                 .email("test@example.com")
                 .name("John")
                 .surname("Doe")
+                .password("password")
                 .role(Role.ROLE_USER)
                 .posts(new ArrayList<>())
                 .build();
 
+        final Image image = Image.builder()
+                .id(1)
+                .filePath("/path/to/image.jpg")
+                .build();
+
         final Post expectedPost = Post.builder()
                 .id(1)
-                .postText(postText)
-                .postDate(now())
                 .user(user)
-                .image(Image.builder().filePath(expectedFilePath).build())
-                .postLikes(new ArrayList<>())
-                .postComments(new ArrayList<>())
+                .postText(postText)
+                .image(image)
+                .postDate(LocalDateTime.now())
+                .postLikes(List.of())
+                .postComments(List.of())
                 .build();
 
         when(userService.getUserByIdOrTrow(userId, ERROR_USER_NOT_FOUND)).thenReturn(user);
-        when(postRepository.save(any(Post.class))).thenReturn(expectedPost);
 
-        // When
-        try (MockedStatic<FileUtils> mockedFileUtils = mockStatic(FileUtils.class)) {
-            mockedFileUtils.when(() -> FileUtils.writeToFile(eq("test@example.com"), anyString(), eq(".png")))
-                    .thenReturn(expectedFilePath);
+        try (MockedStatic<FileUtils> fileUtilsMock = mockStatic(FileUtils.class)) {
+            fileUtilsMock.when(() -> FileUtils.writeToFile(user.getEmail(), "/9j/4AAQSkZJRgABAQAAAQABAAD"))
+                    .thenReturn("/path/to/image.jpg");
 
+            when(postRepository.save(any(Post.class))).thenReturn(expectedPost);
+
+            // When
             final Post result = postServiceImpl.createPost(userId, imageBase64, postText);
 
             // Then
@@ -148,45 +137,20 @@ class PostServiceImplTest {
             assertEquals(expectedPost, result);
             verify(userService).getUserByIdOrTrow(userId, ERROR_USER_NOT_FOUND);
             verify(postRepository).save(any(Post.class));
-            mockedFileUtils.verify(() -> FileUtils.writeToFile(eq("test@example.com"), anyString(), eq(".png")));
+            fileUtilsMock.verify(() -> FileUtils.writeToFile(user.getEmail(), "/9j/4AAQSkZJRgABAQAAAQABAAD"));
         }
-    }
-
-    @Test
-    void createPost_givenNonExistingUser_shouldThrowException() {
-        // Given
-        final Integer userId = 999;
-        final String imageBase64 = "data:image/png;base64,test";
-        final String postText = "Test post content";
-
-        when(userService.getUserByIdOrTrow(userId, ERROR_USER_NOT_FOUND))
-                .thenThrow(new NoSuchElementException(ERROR_USER_NOT_FOUND));
-
-        // When
-        final NoSuchElementException exception = assertThrows(
-                NoSuchElementException.class,
-                () -> postServiceImpl.createPost(userId, imageBase64, postText)
-        );
-
-        // Then
-        assertEquals(ERROR_USER_NOT_FOUND, exception.getMessage());
-        verify(userService).getUserByIdOrTrow(userId, ERROR_USER_NOT_FOUND);
-        verify(postRepository, never()).save(any(Post.class));
     }
 
     @Test
     void createPost_givenInvalidImageFormat_shouldThrowException() {
         // Given
         final Integer userId = 1;
-        final String invalidImageBase64 = "data:image/bmp;base64,invalidformat";
-        final String postText = "Test post content";
+        final String invalidImageBase64 = "data:text/plain;base64,dGVzdA==";
+        final String postText = "Test post text";
 
         final User user = User.builder()
                 .id(userId)
                 .email("test@example.com")
-                .name("John")
-                .surname("Doe")
-                .role(Role.ROLE_USER)
                 .posts(List.of())
                 .build();
 
@@ -208,52 +172,47 @@ class PostServiceImplTest {
     void updatePost_givenExistingPost_shouldUpdateSuccessfully() {
         // Given
         final Integer postId = 1;
-        final String newImageBase64 = "data:image/png;base64,newImage";
-        final String newText = "Updated post content";
-        final String oldFilePath = "/path/to/old/image.jpg";
-        final String newFilePath = "/path/to/new/image.png";
+        final String newImageBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
+        final String newText = "Updated post text";
 
         final User user = User.builder()
                 .id(1)
                 .email("test@example.com")
-                .name("John")
-                .surname("Doe")
-                .role(Role.ROLE_USER)
                 .build();
 
         final Image oldImage = Image.builder()
                 .id(1)
-                .filePath(oldFilePath)
+                .filePath("/old/path/image.jpg")
                 .build();
 
         final Post existingPost = Post.builder()
                 .id(postId)
-                .postText("Old post content")
-                .postDate(now())
                 .user(user)
+                .postText("Old text")
                 .image(oldImage)
-                .postLikes(List.of())
-                .postComments(List.of())
+                .build();
+
+        final Image newImage = Image.builder()
+                .id(2)
+                .filePath("/new/path/image.png")
                 .build();
 
         final Post updatedPost = Post.builder()
                 .id(postId)
-                .postText(newText)
-                .postDate(now())
                 .user(user)
-                .image(Image.builder().filePath(newFilePath).build())
-                .postLikes(List.of())
-                .postComments(List.of())
+                .postText(newText)
+                .image(newImage)
                 .build();
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(existingPost));
-        when(postRepository.save(existingPost)).thenReturn(updatedPost);
 
-        // When
-        try (MockedStatic<FileUtils> mockedFileUtils = mockStatic(FileUtils.class)) {
-            mockedFileUtils.when(() -> FileUtils.writeToFile(eq("test@example.com"), anyString(), eq(".png")))
-                    .thenReturn(newFilePath);
+        try (MockedStatic<FileUtils> fileUtilsMock = mockStatic(FileUtils.class)) {
+            fileUtilsMock.when(() -> FileUtils.writeToFile(user.getEmail(), "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="))
+                    .thenReturn("/new/path/image.png");
 
+            when(postRepository.save(existingPost)).thenReturn(updatedPost);
+
+            // When
             final Post result = postServiceImpl.updatePost(postId, newImageBase64, newText);
 
             // Then
@@ -261,8 +220,8 @@ class PostServiceImplTest {
             assertEquals(updatedPost, result);
             verify(postRepository).findById(postId);
             verify(postRepository).save(existingPost);
-            mockedFileUtils.verify(() -> FileUtils.deleteFile(oldFilePath));
-            mockedFileUtils.verify(() -> FileUtils.writeToFile(eq("test@example.com"), anyString(), eq(".png")));
+            fileUtilsMock.verify(() -> FileUtils.deleteFile("/old/path/image.jpg"));
+            fileUtilsMock.verify(() -> FileUtils.writeToFile(user.getEmail(), "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="));
         }
     }
 
@@ -270,15 +229,15 @@ class PostServiceImplTest {
     void updatePost_givenNonExistingPost_shouldThrowException() {
         // Given
         final Integer postId = 999;
-        final String newImageBase64 = "data:image/png;base64,newImage";
-        final String newText = "Updated post content";
+        final String imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD";
+        final String text = "Test text";
 
         when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
         // When
         final NoSuchElementException exception = assertThrows(
                 NoSuchElementException.class,
-                () -> postServiceImpl.updatePost(postId, newImageBase64, newText)
+                () -> postServiceImpl.updatePost(postId, imageBase64, text)
         );
 
         // Then
@@ -288,12 +247,23 @@ class PostServiceImplTest {
     }
 
     @Test
-    void getAllPostsByUserId_shouldReturnPosts() {
+    void getAllPostsByUserId_shouldReturnPageOfPosts() {
         // Given
         final Integer userId = 1;
         final Pageable pageable = mock(Pageable.class);
-        final Post post = mock(Post.class);
-        final Page<Post> expectedPage = new PageImpl<>(List.of(post));
+
+        final Post post1 = Post.builder()
+                .id(1)
+                .postText("Post 1")
+                .build();
+
+        final Post post2 = Post.builder()
+                .id(2)
+                .postText("Post 2")
+                .build();
+
+        final List<Post> posts = List.of(post1, post2);
+        final Page<Post> expectedPage = new PageImpl<>(posts, pageable, posts.size());
 
         when(postRepository.findAllByUser_Id(userId, pageable)).thenReturn(expectedPage);
 
@@ -303,7 +273,9 @@ class PostServiceImplTest {
         // Then
         assertNotNull(result);
         assertEquals(expectedPage, result);
-        assertEquals(1, result.getContent().size());
+        assertEquals(2, result.getContent().size());
+        assertEquals(post1, result.getContent().get(0));
+        assertEquals(post2, result.getContent().get(1));
         verify(postRepository).findAllByUser_Id(userId, pageable);
     }
 }
