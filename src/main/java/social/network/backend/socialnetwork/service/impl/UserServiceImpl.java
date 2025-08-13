@@ -1,8 +1,9 @@
 package social.network.backend.socialnetwork.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.repository.UserRepository;
@@ -16,14 +17,11 @@ import static social.network.backend.socialnetwork.entity.enums.Role.ROLE_USER;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.ERROR_USER_NOT_FOUND;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(final UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Contract("_ -> new")
     @Override
@@ -79,5 +77,21 @@ public class UserServiceImpl implements UserService {
     public User getUserByIdOrTrow(final Integer userId, final String errorMessage) {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(errorMessage));
+    }
+
+    @Override
+    public User login(final String email, final @NotNull String password) {
+         final User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User with email %s not found."));
+
+//         if(!this.passwordEncoder.matches(password, user.getPassword())){
+//             throw new IllegalArgumentException("Wrong password.");
+//         }
+
+        if(!password.equals(user.getPassword())){
+            throw new IllegalArgumentException("Wrong password.");
+        }
+
+        return user;
     }
 }

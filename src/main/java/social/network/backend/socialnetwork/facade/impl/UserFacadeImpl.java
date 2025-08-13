@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
+import social.network.backend.socialnetwork.dto.LoginDTO;
 import social.network.backend.socialnetwork.dto.user.CreateUserDTO;
 import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
@@ -70,5 +71,14 @@ public final class UserFacadeImpl implements UserFacade {
     @Override
     public void deleteUser(final Integer id) {
         this.userService.deleteUser(id);
+    }
+
+    @Override
+    public GetUserDTO login(final LoginDTO login, final BindingResult result) {
+        this.validator.validate(login,result);
+
+        final User user = this.userService.login(login.email(), login.password());
+
+        return this.userMapper.toDto(user);
     }
 }
