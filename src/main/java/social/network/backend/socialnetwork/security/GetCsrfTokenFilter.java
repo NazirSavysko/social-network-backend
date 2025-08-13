@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.withDefaults;
 
@@ -24,7 +23,6 @@ import static org.springframework.security.web.servlet.util.matcher.PathPatternR
 public final class GetCsrfTokenFilter extends OncePerRequestFilter {
 
     private RequestMatcher requestMatcher = withDefaults().matcher(GET, "/csrf");
-    private RequestMatcher postMatcher = withDefaults().matcher(POST, "/api/v1/auth/login");
 
     private CsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
 
