@@ -3,7 +3,6 @@ package social.network.backend.socialnetwork.service.impl;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.repository.UserRepository;
@@ -21,7 +20,6 @@ import static social.network.backend.socialnetwork.validation.ErrorMessages.ERRO
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Contract("_ -> new")
     @Override
