@@ -1,4 +1,4 @@
-package social.network.backend.socialnetwork.dto;
+package social.network.backend.socialnetwork.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

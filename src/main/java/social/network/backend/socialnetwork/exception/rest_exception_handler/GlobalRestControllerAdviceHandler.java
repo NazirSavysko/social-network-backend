@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import social.network.backend.socialnetwork.exception.FileStorageException;
@@ -72,5 +73,14 @@ public final class GlobalRestControllerAdviceHandler {
     @Contract("_ -> new")
     private @NotNull @Unmodifiable Map<String, String> getErrorAttributes(final @NotNull Throwable throwable) {
         return Map.of("error", throwable.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public @NotNull ResponseEntity<?> handleBadCredentialsException(final @NotNull BadCredentialsException e) {
+        LOGGER.error("BadCredentialsException: {}", e.getMessage(), e);
+
+        return status(UNAUTHORIZED)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
     }
 }

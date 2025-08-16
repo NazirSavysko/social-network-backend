@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 public class UserDetailsMapperImpl implements Mapper<User, UserDetails> {
+
     @Override
     public UserDetails toDto(final User entity) {
         return new UserDetails() {

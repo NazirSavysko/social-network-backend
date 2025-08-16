@@ -1,7 +1,7 @@
 package social.network.backend.socialnetwork.controller.post;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +19,10 @@ import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/posts/{postId:\\d+}")
+@AllArgsConstructor
 class PostController {
 
     private final PostFacade postFacade;
-
-    @Autowired
-    public PostController(PostFacade postFacade) {
-        this.postFacade = postFacade;
-    }
 
     @ModelAttribute("post")
     public @NotNull GetPostDTO getMessageId(@PathVariable("postId") Integer postId) {

@@ -1,9 +1,9 @@
 package social.network.backend.socialnetwork.mapper.impl.user;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
@@ -20,17 +20,11 @@ import static social.network.backend.socialnetwork.utils.MapperUtils.mapCollecti
 
 
 @Component("userMapper")
+@AllArgsConstructor
 public final class UserMapperImpl implements Mapper<User, GetUserDTO> {
 
     private final Mapper<Message, GetMessageDTO> messageMapper;
     private final Mapper<Post, GetPostDTO> postMapper;
-
-    @Autowired
-    public UserMapperImpl(final Mapper<Message, GetMessageDTO> messageMapper,
-                          final Mapper<Post, GetPostDTO> postMapper) {
-        this.messageMapper = messageMapper;
-        this.postMapper = postMapper;
-    }
 
     @Contract("_ -> new")
     @Override

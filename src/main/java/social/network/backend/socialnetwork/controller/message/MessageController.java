@@ -1,8 +1,8 @@
 package social.network.backend.socialnetwork.controller.message;
 
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,6 @@ import social.network.backend.socialnetwork.controller.payload.UpdateMessagePayl
 import social.network.backend.socialnetwork.dto.message.GetMessageDTO;
 import social.network.backend.socialnetwork.dto.message.UpdateMessageDTO;
 import social.network.backend.socialnetwork.facade.MessageFacade;
-import social.network.backend.socialnetwork.facade.impl.MessageFacadeImpl;
 
 import java.util.Map;
 
@@ -22,14 +21,10 @@ import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/messages/{messageId:\\d+}")
+@AllArgsConstructor
 public final class MessageController {
 
     private final MessageFacade messageFacade;
-
-    @Autowired
-    public MessageController(final MessageFacadeImpl messageFacade) {
-        this.messageFacade = messageFacade;
-    }
 
     @ModelAttribute("message")
     public @NotNull GetMessageDTO getMessageId(@PathVariable("messageId") Integer messageId) {

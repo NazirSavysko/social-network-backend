@@ -1,7 +1,7 @@
 package social.network.backend.socialnetwork.facade.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -20,6 +20,7 @@ import social.network.backend.socialnetwork.validation.DtoValidator;
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapDto;
 
 @Component
+@AllArgsConstructor
 public final class SubscriptionFacadeImpl implements SubscriptionFacade {
 
     private final SubscriptionService subscriptionService;
@@ -27,16 +28,6 @@ public final class SubscriptionFacadeImpl implements SubscriptionFacade {
     private final Mapper<User, UserShortDTO> userMapper;
     private final Mapper<Subscription, GetSubscriptionDTO> subscriptionMapper;
 
-    @Autowired
-    public SubscriptionFacadeImpl(final Mapper<Subscription, GetSubscriptionDTO> subscriptionMapper,
-                                  final Mapper<User, UserShortDTO> userMapper,
-                                  final SubscriptionService subscriptionService,
-                                  final DtoValidator validator) {
-        this.subscriptionService = subscriptionService;
-        this.userMapper = userMapper;
-        this.validator = validator;
-        this.subscriptionMapper = subscriptionMapper;
-    }
 
     @Override
     public GetSubscriptionDTO getSubscriptionById(final Integer subscriptionId) {

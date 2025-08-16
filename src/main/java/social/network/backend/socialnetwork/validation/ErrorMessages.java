@@ -20,6 +20,13 @@ public final class ErrorMessages {
     public static final String ERROR_SUBSCRIPTION_ALREADY_EXISTS  = "Subscription already exists between these users";
 
 
+    //Authority
+    public static final String ERROR_AUTHORITIES_NULL = "authorities must not be null";
+    public static final String ERROR_AUTHORITIES_NOT_LIST = "authorities must be a List<String>";
+    public static final String ERROR_AUTHORITIES_INVALID_ITEM = "authorities must contain only non-empty strings";
+
+
+
     private ErrorMessages() {
     }
 }

@@ -1,8 +1,8 @@
 package social.network.backend.socialnetwork.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,16 +18,12 @@ import static java.time.LocalDateTime.now;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 @Service
+@AllArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
     private final UserService userService;
 
-    @Autowired
-    public MessageServiceImpl(final MessageRepository messageRepository, final UserService userService) {
-        this.messageRepository = messageRepository;
-        this.userService = userService;
-    }
 
     @Contract("_ -> new")
     @Override

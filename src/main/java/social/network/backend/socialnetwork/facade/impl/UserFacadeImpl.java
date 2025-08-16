@@ -1,10 +1,9 @@
 package social.network.backend.socialnetwork.facade.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
-import social.network.backend.socialnetwork.dto.LoginDTO;
 import social.network.backend.socialnetwork.dto.user.CreateUserDTO;
 import social.network.backend.socialnetwork.dto.user.GetUserDTO;
 import social.network.backend.socialnetwork.dto.user.UpdateUserDTO;
@@ -15,20 +14,12 @@ import social.network.backend.socialnetwork.service.UserService;
 import social.network.backend.socialnetwork.validation.DtoValidator;
 
 @Component
+@AllArgsConstructor
 public final class UserFacadeImpl implements UserFacade {
 
     private final UserService userService;
     private final Mapper<User, GetUserDTO> userMapper;
     private final DtoValidator validator;
-
-    @Autowired
-    public UserFacadeImpl(final UserService userService,
-                          final Mapper<User, GetUserDTO> userMapper,
-                          final DtoValidator validator) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-        this.validator = validator;
-    }
 
     @Override
     public GetUserDTO getUserById(final Integer userId) {
@@ -73,12 +64,4 @@ public final class UserFacadeImpl implements UserFacade {
         this.userService.deleteUser(id);
     }
 
-    @Override
-    public GetUserDTO login(final LoginDTO login, final BindingResult result) {
-        this.validator.validate(login,result);
-
-        final User user = this.userService.login(login.email(), login.password());
-
-        return this.userMapper.toDto(user);
-    }
 }

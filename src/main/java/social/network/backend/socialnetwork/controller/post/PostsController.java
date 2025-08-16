@@ -1,6 +1,6 @@
 package social.network.backend.socialnetwork.controller.post;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,14 +20,10 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/api/v1/posts")
+@AllArgsConstructor
 public final class PostsController {
 
     private final PostFacade postFacade;
-
-    @Autowired
-    public PostsController(PostFacade postFacade) {
-        this.postFacade = postFacade;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createPost(final @RequestBody CreatePostDTO createPostDTO,

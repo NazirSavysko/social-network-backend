@@ -1,6 +1,6 @@
 package social.network.backend.socialnetwork.controller.subscription;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +18,10 @@ import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/subscriptions/{subscriptionId:\\d+}")
+@AllArgsConstructor
 public final class SubscriptionController {
 
-
     private final SubscriptionFacade subscriptionFacade;
-
-    @Autowired
-    public SubscriptionController(final SubscriptionFacade subscriptionFacade) {
-        this.subscriptionFacade = subscriptionFacade;
-    }
-
 
     @ModelAttribute("subscription")
     public GetSubscriptionDTO getUserId(final @PathVariable("subscriptionId") Integer subscriptionId) {

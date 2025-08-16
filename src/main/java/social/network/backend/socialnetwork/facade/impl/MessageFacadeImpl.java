@@ -1,8 +1,8 @@
 package social.network.backend.socialnetwork.facade.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -17,21 +17,12 @@ import social.network.backend.socialnetwork.service.MessageService;
 import social.network.backend.socialnetwork.validation.DtoValidator;
 
 @Component
+@AllArgsConstructor
 public final class MessageFacadeImpl implements MessageFacade {
 
     private final MessageService messageService;
     private final Mapper<Message, GetMessageDTO> messageMapper;
     private final DtoValidator validator;
-
-    @Autowired
-    public MessageFacadeImpl(final MessageService messageService,
-                             final Mapper<Message, GetMessageDTO> messageMapper,
-                             final DtoValidator validator) {
-        this.messageService = messageService;
-        this.messageMapper = messageMapper;
-        this.validator = validator;
-    }
-
 
     @Override
     public GetMessageDTO createMessage(final @NotNull CreateMessageDTO createMessageDTO,

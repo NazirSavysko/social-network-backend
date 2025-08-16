@@ -1,6 +1,6 @@
 package social.network.backend.socialnetwork.controller.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +18,11 @@ import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/api/v1/users/{userId:\\d+}")
+@AllArgsConstructor
 public final class UserController {
 
     private final UserFacade userFacade;
 
-    @Autowired
-    public UserController(UserFacade userFacade) {
-        this.userFacade = userFacade;
-    }
 
     @ModelAttribute("user")
     public GetUserDTO getUserId(final @PathVariable("userId") Integer userId) {

@@ -1,7 +1,7 @@
 package social.network.backend.socialnetwork.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,16 +21,11 @@ import static social.network.backend.socialnetwork.utils.FileUtils.writeToFile;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 @Service
+@AllArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
-
-    @Autowired
-    public PostServiceImpl(final PostRepository postRepository,final UserService userService) {
-        this.postRepository = postRepository;
-        this.userService = userService;
-    }
 
     @Override
     public Post getPostById(final int id) {

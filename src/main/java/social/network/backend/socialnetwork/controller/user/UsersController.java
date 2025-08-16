@@ -1,6 +1,6 @@
 package social.network.backend.socialnetwork.controller.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,14 +18,11 @@ import static org.springframework.http.ResponseEntity.created;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@AllArgsConstructor
 public final class UsersController {
 
     private final UserFacade userFacade;
 
-    @Autowired
-    public UsersController(final UserFacade userFacade) {
-        this.userFacade = userFacade;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(final @RequestBody CreateUserDTO createUserDTO,
@@ -36,6 +33,7 @@ public final class UsersController {
         return created(uriComponentsBuilder
                         .replacePath("/api/v1/users/{userId}")
                         .build(Map.of("userId", createdUser.id()))
-        ).body(createdUser);
+        )
+                .body(createdUser);
     }
 }

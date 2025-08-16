@@ -1,7 +1,7 @@
 package social.network.backend.socialnetwork.facade.impl;
 
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -18,20 +18,12 @@ import social.network.backend.socialnetwork.validation.DtoValidator;
 import static social.network.backend.socialnetwork.utils.MapperUtils.mapDto;
 
 @Component
+@AllArgsConstructor
 public final class PostFacadeImpl implements PostFacade {
 
     private final PostMapperImpl postMapper;
     private final DtoValidator validator;
     private final PostService postService;
-
-    @Autowired
-    public PostFacadeImpl(final PostMapperImpl postMapper,
-                          final DtoValidator validator,
-                          final PostService postService) {
-        this.postMapper = postMapper;
-        this.validator = validator;
-        this.postService = postService;
-    }
 
     @Override
     public GetPostDTO createPost(final CreatePostDTO createPostDTO, final BindingResult result) {

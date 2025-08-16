@@ -78,20 +78,4 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(errorMessage));
     }
-
-    @Override
-    public User login(final String email, final @NotNull String password) {
-         final User user = this.userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("User with email %s not found."));
-
-//         if(!this.passwordEncoder.matches(password, user.getPassword())){
-//             throw new IllegalArgumentException("Wrong password.");
-//         }
-
-        if(!password.equals(user.getPassword())){
-            throw new IllegalArgumentException("Wrong password.");
-        }
-
-        return user;
-    }
 }

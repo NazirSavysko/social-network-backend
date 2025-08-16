@@ -1,6 +1,6 @@
 package social.network.backend.socialnetwork.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,12 @@ import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 
 @Service
+@AllArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserService userService;
 
-    @Autowired
-    public SubscriptionServiceImpl(final SubscriptionRepository subscriptionRepository, final UserService userService) {
-        this.subscriptionRepository = subscriptionRepository;
-        this.userService = userService;
-    }
 
     @Override
     public Subscription getSubscriptionById(final Integer subscriptionId) {
