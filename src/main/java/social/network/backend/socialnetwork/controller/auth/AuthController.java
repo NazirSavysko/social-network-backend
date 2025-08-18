@@ -1,7 +1,6 @@
 package social.network.backend.socialnetwork.controller.auth;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +18,7 @@ import social.network.backend.socialnetwork.validation.DtoValidator;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
@@ -44,7 +44,7 @@ public class AuthController {
         final String token = this.jwtTokenFactory.createToken(userDetails);
 
         return status(OK)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .body(
                         Map.of(
                                 "token", token

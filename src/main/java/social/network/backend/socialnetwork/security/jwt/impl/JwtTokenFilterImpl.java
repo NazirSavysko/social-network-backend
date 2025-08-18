@@ -13,6 +13,7 @@ import social.network.backend.socialnetwork.security.jwt.JwtTokenReader;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
@@ -20,14 +21,15 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 public final class JwtTokenFilterImpl extends OncePerRequestFilter {
 
     private static final int START_INDEX = 7;
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenReader jwtTokenReader;
 
     @Override
     protected void doFilterInternal(final @NotNull HttpServletRequest request, final @NotNull HttpServletResponse response, final @NotNull FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(AUTHORIZATION);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
             final String jwtToken = authHeader.substring(START_INDEX);
             final String username = this.jwtTokenReader.getUsername(jwtToken);
 

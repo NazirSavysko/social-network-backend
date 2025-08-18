@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.springframework.stereotype.Component;
+import social.network.backend.socialnetwork.dto.admin.TimeRangeDTO;
 import social.network.backend.socialnetwork.dto.post.GetPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
@@ -27,33 +28,33 @@ public final class AdminFacadeImpl implements AdminFacade {
     private final AdminService adminService;
 
 
-    @Contract(" -> new")
+    @Contract("_ -> new")
     @Override
-    public @NotNull GetPostCount postCount() {
-        final int postCount = this.adminService.postCount();
+    public @NotNull GetPostCount postCount(final @NotNull TimeRangeDTO timeRangeDTO) {
+        final int postCount = this.adminService.postCount(timeRangeDTO.start(),timeRangeDTO.end());
 
         return new GetPostCount(postCount);
     }
 
     @Override
-    public List<UserShortDTO> getTenTheMostActiveUsers() {
-        final List<User> mostActiveUsers = this.adminService.getTenTheMostActiveUsers();
+    public List<UserShortDTO> getTenTheMostActiveUsers(final @NotNull TimeRangeDTO timeRangeDTO) {
+        final List<User> mostActiveUsers = this.adminService.getTenTheMostActiveUsers(timeRangeDTO.start(),timeRangeDTO.end());
 
         return mapCollection(mostActiveUsers, this.userShortMapper::toDto);
     }
 
     @Contract(pure = true)
     @Override
-    public @NotNull @Unmodifiable List<GetPostDTO> getTopTenPostByLikes() {
-        final List<Post> postList = this.adminService.getTenTheMostLikedPosts();
+    public @NotNull @Unmodifiable List<GetPostDTO> getTopTenPostByLikes(final @NotNull TimeRangeDTO timeRangeDTO) {
+        final List<Post> postList = this.adminService.getTenTheMostLikedPosts(timeRangeDTO.start(),timeRangeDTO.end());
 
         return mapCollection(postList, this.postMapper::toDto);
     }
 
     @Contract(pure = true)
     @Override
-    public @NotNull @Unmodifiable List<GetPostDTO> getTopTenPostByComments() {
-        final List<Post> postList = this.adminService.getTenthMostCommentedPosts();
+    public @NotNull @Unmodifiable List<GetPostDTO> getTopTenPostByComments(final @NotNull TimeRangeDTO timeRangeDTO) {
+        final List<Post> postList = this.adminService.getTenthMostCommentedPosts(timeRangeDTO.start(),timeRangeDTO.end());
 
 
         return mapCollection(postList, this.postMapper::toDto);
