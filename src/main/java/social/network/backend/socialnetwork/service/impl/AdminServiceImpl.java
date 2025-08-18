@@ -40,11 +40,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Post> getTenTheMostLikedPosts(final Instant start, final Instant end) {
-        return this.postRepository.findTopTenMostLikedPostsByPeriod(of(LIMIT),start,end);
+        return this.postRepository.findTopTenMostLikedPostsByPeriod(of(LIMIT), start, end);
     }
 
     @Override
-    public int calculateAveragePostsPerDay(final Instant start, final Instant end) {
-        return this.postRepository.calculateAveragePostsPerDay(start, end);
+    public double getAveragePostCountByDay(final Instant start, final Instant end) {
+       return this .postRepository.calculateAveragePostsPerDay(start, end);
+
     }
 }

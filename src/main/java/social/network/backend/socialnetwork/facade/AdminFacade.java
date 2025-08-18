@@ -1,6 +1,8 @@
 package social.network.backend.socialnetwork.facade;
 
+import org.jetbrains.annotations.NotNull;
 import social.network.backend.socialnetwork.dto.admin.TimeRangeDTO;
+import social.network.backend.socialnetwork.dto.post.GetAvgPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
@@ -16,4 +18,6 @@ public interface AdminFacade {
     List<GetPostDTO> getTopTenPostByLikes(final TimeRangeDTO timeRangeDTO);
 
     List<GetPostDTO> getTopTenPostByComments(final TimeRangeDTO timeRangeDTO);
+
+    @NotNull GetAvgPostCount getAveragePostCountByDay(TimeRangeDTO timeRangeDTO);
 }

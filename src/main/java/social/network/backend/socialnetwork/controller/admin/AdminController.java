@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import social.network.backend.socialnetwork.dto.admin.TimeRangeDTO;
+import social.network.backend.socialnetwork.dto.post.GetAvgPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
@@ -17,17 +18,24 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api/v1/admins")
+@RequestMapping("/api/v1/admins/statistics")
 @AllArgsConstructor
 public final class AdminController {
 
     private final AdminFacade adminFacade;
 
-    @PostMapping("/post/count")
+    @PostMapping("/posts/count")
     public ResponseEntity<?> getPostCount(final @RequestBody TimeRangeDTO timeRangeDTO) {
         final GetPostCount getPostCount = this.adminFacade.postCount(timeRangeDTO);
 
         return ok(getPostCount);
+    }
+
+    @PostMapping("/posts/count/average-per-day")
+    public ResponseEntity<?> getAveragePostCountByDay(final @RequestBody TimeRangeDTO timeRangeDTO) {
+        final GetAvgPostCount postCount = this.adminFacade.getAveragePostCountByDay(timeRangeDTO);
+
+        return ok(postCount);
     }
 
     @PostMapping("/users/most-active")

@@ -10,9 +10,9 @@ import social.network.backend.socialnetwork.repository.SubscriptionRepository;
 import social.network.backend.socialnetwork.service.SubscriptionService;
 import social.network.backend.socialnetwork.service.UserService;
 
+import java.time.Instant;
 import java.util.NoSuchElementException;
 
-import static java.time.LocalDateTime.now;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 
 
@@ -38,7 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         final Subscription subscription = Subscription.builder()
                 .subscriber(subscriber)
                 .target(target)
-                .subscribedAt(now())
+                .subscribedAt(Instant.now())
                 .build();
 
         return subscriptionRepository.save(subscription);

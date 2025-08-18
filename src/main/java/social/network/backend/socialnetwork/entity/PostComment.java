@@ -3,7 +3,7 @@ package social.network.backend.socialnetwork.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -31,6 +31,6 @@ public final class PostComment {
 
     private String commentText;
 
-    private LocalDateTime dateComment;
+    private Instant dateComment;
 
 }

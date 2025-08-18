@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.springframework.stereotype.Component;
 import social.network.backend.socialnetwork.dto.admin.TimeRangeDTO;
+import social.network.backend.socialnetwork.dto.post.GetAvgPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostCount;
 import social.network.backend.socialnetwork.dto.post.GetPostDTO;
 import social.network.backend.socialnetwork.dto.user.UserShortDTO;
@@ -58,5 +59,12 @@ public final class AdminFacadeImpl implements AdminFacade {
 
 
         return mapCollection(postList, this.postMapper::toDto);
+    }
+
+    @Override
+    public @NotNull GetAvgPostCount getAveragePostCountByDay(final @NotNull TimeRangeDTO timeRangeDTO) {
+        final double postCount = this.adminService.getAveragePostCountByDay(timeRangeDTO.start(),timeRangeDTO.end());
+
+        return new GetAvgPostCount(postCount);
     }
 }

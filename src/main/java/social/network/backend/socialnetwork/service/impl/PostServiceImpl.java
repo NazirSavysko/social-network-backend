@@ -12,10 +12,10 @@ import social.network.backend.socialnetwork.repository.PostRepository;
 import social.network.backend.socialnetwork.service.PostService;
 import social.network.backend.socialnetwork.service.UserService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static java.time.LocalDateTime.now;
 import static social.network.backend.socialnetwork.utils.FileUtils.deleteFile;
 import static social.network.backend.socialnetwork.utils.FileUtils.writeToFile;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
                 .user(user)
                 .postText(postText)
                 .image(image)
-                .postDate(now())
+                .postDate(Instant.now())
                 .postLikes(List.of())
                 .postComments(List.of())
                 .build();

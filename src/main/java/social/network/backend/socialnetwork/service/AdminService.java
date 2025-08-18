@@ -16,5 +16,5 @@ public interface AdminService {
 
     List<Post> getTenTheMostLikedPosts(final Instant start, final Instant end);
 
-    int calculateAveragePostsPerDay(final Instant start, final Instant end);
+    double getAveragePostCountByDay(Instant start, Instant end);
 }

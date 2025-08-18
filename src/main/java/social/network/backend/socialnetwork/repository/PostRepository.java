@@ -20,16 +20,16 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             """)
     int countPostsByPeriod(Instant start, Instant end);
 
-    @Query("""
-                SELECT avg(cnt)
-                FROM (
-                    SELECT count(p) as cnt
-                    FROM Post p
-                    WHERE p.postDate BETWEEN :start AND :end
-                    GROUP BY p.postDate
-                )
-            """)
-    int calculateAveragePostsPerDay(Instant start, Instant end);
+    @Query(value = """
+            SELECT AVG(post_count)
+            FROM (
+                SELECT COUNT(*) AS post_count
+                FROM post p
+                WHERE p.post_date BETWEEN :start AND :end
+                GROUP BY date_trunc('day', p.post_date)
+            ) AS daily_counts
+            """, nativeQuery = true)
+    Double  calculateAveragePostsPerDay(Instant start, Instant end);
 
     @Query("""
             SELECT p
