@@ -58,6 +58,4 @@ public final class AdminController {
 
         return ok(posts);
     }
-
-
 }

@@ -30,6 +30,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize(value = "hasRole('ADMIN') or #user.email() == principal.username")
     public ResponseEntity<GetUserDTO> getUser(final @ModelAttribute("user") GetUserDTO user) {
         return ok(user);
     }

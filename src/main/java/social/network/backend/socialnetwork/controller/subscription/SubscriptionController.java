@@ -2,6 +2,7 @@ package social.network.backend.socialnetwork.controller.subscription;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdateSubscriptionPayload;
@@ -35,6 +36,8 @@ public final class SubscriptionController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize(value = "hasRole('ADMIN') or (#subscription.subscriber().email() == principal.username " +
+            "and @userServiceImpl.getUserById(subscription.subscriber()).email == principal.username)")
     public ResponseEntity<?> updateSubscription(
             final @ModelAttribute(value = "subscription", binding = false) GetSubscriptionDTO subscription,
             final @RequestBody UpdateSubscriptionPayload updateSubscriptionPayload, final BindingResult result) {
@@ -49,6 +52,7 @@ public final class SubscriptionController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize(value = "hasRole('ADMIN') or #subscription.subscriber().email() == principal.username or #subscription.subscribedTo().email() == principal.username")
     public ResponseEntity<?> deleteSubscription(
             final @ModelAttribute(value = "subscription", binding = false) GetSubscriptionDTO subscription) {
         this.subscriptionFacade.deleteSubscription(subscription.id());

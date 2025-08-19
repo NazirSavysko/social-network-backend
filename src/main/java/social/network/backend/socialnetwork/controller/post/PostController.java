@@ -3,6 +3,7 @@ package social.network.backend.socialnetwork.controller.post;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdatePostPayload;
@@ -25,10 +26,9 @@ class PostController {
     private final PostFacade postFacade;
 
     @ModelAttribute("post")
-    public @NotNull GetPostDTO getMessageId(@PathVariable("postId") Integer postId) {
+    public @NotNull GetPostDTO getPostId(@PathVariable("postId") Integer postId) {
         return  this.postFacade.getPostById(postId);
     }
-
 
     @GetMapping
     public ResponseEntity<?> getPost(final @ModelAttribute(value = "post") GetPostDTO post) {
@@ -36,6 +36,7 @@ class PostController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize(value = "hasRole('ADMIN') or @postServiceImpl.getPostById(#post.id()).user.email == principal.username")
     public ResponseEntity<?> updatePost(final @ModelAttribute(value = "post", binding = false) GetPostDTO post,
                                         final @RequestBody UpdatePostPayload postPayload,
                                         final BindingResult result){
@@ -51,6 +52,7 @@ class PostController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize(value = "hasRole('ADMIN') or @postServiceImpl.getPostById(#post.id()).user.email == principal.username")
     public ResponseEntity<?> deletePost(final @ModelAttribute(value = "post",binding = false) GetPostDTO post) {
         this.postFacade.deletePost(post.id());
 

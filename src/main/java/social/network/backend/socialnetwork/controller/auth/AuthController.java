@@ -27,14 +27,13 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
-public class AuthController {
+public final class AuthController {
 
     private static final String AUTHORIZATION_HEADER_VALUE = "Bearer %s";
 
     private final AuthService authService;
     private final DtoValidator validator;
     private UserFacade userFacade;
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(final @RequestBody LoginDTO login, final BindingResult result) {

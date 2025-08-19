@@ -85,7 +85,7 @@ public final class GlobalRestControllerAdviceHandler {
                 .body(getErrorAttributes(e));
     }
 
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public @NotNull ResponseEntity<?> handleAccessDeniedException(final @NotNull AccessDeniedException e) {
         LOGGER.error("AccessDeniedException: {}", e.getMessage(), e);
 

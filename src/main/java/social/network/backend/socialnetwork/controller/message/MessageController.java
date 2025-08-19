@@ -4,6 +4,7 @@ package social.network.backend.socialnetwork.controller.message;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdateMessagePayload;
@@ -32,12 +33,14 @@ public final class MessageController {
     }
 
     @GetMapping
+    @PreAuthorize(value = "hasRole('ADMIN') or #message.sender().email() == principal.username or #message.receiver().email() == principal.username")
     public @NotNull ResponseEntity<?> getMessage(@ModelAttribute("message") GetMessageDTO message) {
 
         return ok(message);
     }
 
     @PutMapping("/update")
+    @PreAuthorize(value = "hasRole('ADMIN') or #message.sender().email() == principal.username")
     public @NotNull ResponseEntity<?> updateMessage(final @ModelAttribute(value = "message", binding = false) GetMessageDTO message,
                                                     final @RequestBody UpdateMessagePayload content,
                                                     final BindingResult result) {
@@ -48,6 +51,7 @@ public final class MessageController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize(value = "hasRole('ADMIN') or #message.sender().email() == principal.username")
     public @NotNull ResponseEntity<?> deleteMessage(final @ModelAttribute(value = "message", binding = false) GetMessageDTO message) {
         this.messageFacade.deleteMessage(message.id());
 
