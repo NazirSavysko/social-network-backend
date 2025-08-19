@@ -7,11 +7,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import social.network.backend.socialnetwork.security.jwt.JwtTokenReader;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -34,13 +41,23 @@ public final class JwtTokenFilterImpl extends OncePerRequestFilter {
             final String username = this.jwtTokenReader.getUsername(jwtToken);
 
             if (username != null && getContext().getAuthentication() == null) {
-                final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        this.jwtTokenReader.getAuthorities(jwtToken)
-                );
+                final List<GrantedAuthority> authorities = jwtTokenReader.getAuthorities(jwtToken);
 
-                getContext().setAuthentication(token);
+                final UserDetails principal = User
+                        .withUsername(username)
+                        .password("N/A")
+                        .authorities(authorities)
+                        .accountExpired(false).accountLocked(false)
+                        .credentialsExpired(false).disabled(false)
+                        .build();
+
+                final UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                final SecurityContext ctx = SecurityContextHolder.createEmptyContext();
+                ctx.setAuthentication(auth);
+                SecurityContextHolder.setContext(ctx);
             }
         }
 

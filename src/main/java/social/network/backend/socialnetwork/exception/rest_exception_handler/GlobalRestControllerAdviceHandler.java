@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -80,6 +81,15 @@ public final class GlobalRestControllerAdviceHandler {
         LOGGER.error("BadCredentialsException: {}", e.getMessage(), e);
 
         return status(UNAUTHORIZED)
+                .contentType(APPLICATION_JSON)
+                .body(getErrorAttributes(e));
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public @NotNull ResponseEntity<?> handleAccessDeniedException(final @NotNull AccessDeniedException e) {
+        LOGGER.error("AccessDeniedException: {}", e.getMessage(), e);
+
+        return status(FORBIDDEN)
                 .contentType(APPLICATION_JSON)
                 .body(getErrorAttributes(e));
     }

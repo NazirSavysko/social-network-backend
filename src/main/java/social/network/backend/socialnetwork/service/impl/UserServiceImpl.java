@@ -3,6 +3,7 @@ package social.network.backend.socialnetwork.service.impl;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.repository.UserRepository;
@@ -20,6 +21,7 @@ import static social.network.backend.socialnetwork.validation.ErrorMessages.ERRO
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Contract("_ -> new")
     @Override
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
                 .email(email)
                 .name(name)
                 .surname(surname)
-                .password(password)
+                .password(this.passwordEncoder.encode(password))
                 .role(ROLE_USER)
                 .messages(List.of())
                 .receivedMessages(List.of())
@@ -59,7 +61,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setName(name);
         user.setSurname(surname);
-        user.setPassword(password);
+        user.setPassword(this.passwordEncoder.encode(password));
 
         return this.userRepository.save(user);
     }

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.mapper.Mapper;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
+import static java.util.List.of;
 
 @Component
 public class UserDetailsMapperImpl implements Mapper<User, UserDetails> {
@@ -18,7 +18,7 @@ public class UserDetailsMapperImpl implements Mapper<User, UserDetails> {
         return new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
-                return new ArrayList<>(List.of(entity.getRole()));
+                return of(entity.getRole());
             }
 
             @Override

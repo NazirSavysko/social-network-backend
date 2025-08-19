@@ -2,6 +2,7 @@ package social.network.backend.socialnetwork.controller.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import social.network.backend.socialnetwork.controller.payload.UpdateUserPayload;
@@ -19,10 +20,9 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/v1/users/{userId:\\d+}")
 @AllArgsConstructor
-public final class UserController {
+public class UserController {
 
     private final UserFacade userFacade;
-
 
     @ModelAttribute("user")
     public GetUserDTO getUserId(final @PathVariable("userId") Integer userId) {
@@ -34,11 +34,12 @@ public final class UserController {
         return ok(user);
     }
 
-
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(final @ModelAttribute(value = "user", binding = false) GetUserDTO user,
-                                        final @RequestBody UpdateUserPayload updateUserPayload,
-                                        final BindingResult result) {
+    @PreAuthorize(value = "hasRole('ADMIN') or #user.email() == principal.username")
+    public ResponseEntity<?> updateUser(
+            final @ModelAttribute(value = "user", binding = false) GetUserDTO user,
+            final @RequestBody UpdateUserPayload updateUserPayload,
+            final BindingResult result) {
         final UpdateUserDTO updateUserDTO = new UpdateUserDTO(
                 user.id(),
                 updateUserPayload.name(),
@@ -52,6 +53,7 @@ public final class UserController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize(value = "hasRole('ADMIN') or #user.email() == principal.username")
     public ResponseEntity<?> deleteUser(final @ModelAttribute(value = "user", binding = false) GetUserDTO user) {
         this.userFacade.deleteUser(user.id());
 
