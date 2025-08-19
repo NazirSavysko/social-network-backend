@@ -46,6 +46,5 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public double getAveragePostCountByDay(final Instant start, final Instant end) {
        return this .postRepository.calculateAveragePostsPerDay(start, end);
-
     }
 }

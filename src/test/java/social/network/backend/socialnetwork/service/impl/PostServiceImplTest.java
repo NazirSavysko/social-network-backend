@@ -17,7 +17,7 @@ import social.network.backend.socialnetwork.repository.PostRepository;
 import social.network.backend.socialnetwork.service.UserService;
 import social.network.backend.socialnetwork.utils.FileUtils;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -46,7 +46,7 @@ class PostServiceImplTest {
         final Post expectedPost = Post.builder()
                 .id(postId)
                 .postText("Test post")
-                .postDate(LocalDateTime.now())
+                .postDate(Instant.now())
                 .build();
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(expectedPost));
@@ -116,7 +116,7 @@ class PostServiceImplTest {
                 .user(user)
                 .postText(postText)
                 .image(image)
-                .postDate(LocalDateTime.now())
+                .postDate(Instant.now())
                 .postLikes(List.of())
                 .postComments(List.of())
                 .build();

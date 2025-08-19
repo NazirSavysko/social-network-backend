@@ -28,8 +28,7 @@ public final class MessagesController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN') or @userServiceImpl.getUserById(#createMessageDTO.senderId()).email == principal.username")
-    public ResponseEntity<?> createMessage(final @RequestBody CreateMessageDTO createMessageDTO,
-                                           final BindingResult result,
+    public ResponseEntity<?> createMessage(final @RequestBody CreateMessageDTO createMessageDTO, final BindingResult result,
                                            final UriComponentsBuilder uriComponentsBuilder) {
         final GetMessageDTO createdMessage = this.messageFacade.createMessage(createMessageDTO, result);
 
@@ -41,8 +40,7 @@ public final class MessagesController {
 
     @GetMapping("/user/{userId:\\d+}")
     @PreAuthorize("hasRole('ADMIN') or @userServiceImpl.getUserById(#userId).email == principal.username")
-    public ResponseEntity<?> getByUserId(final @PageableDefault Pageable pageable,
-                                         final @PathVariable("userId") Integer userId) {
+    public ResponseEntity<?> getByUserId(final @PageableDefault Pageable pageable, final @PathVariable("userId") Integer userId) {
         final Page<GetMessageDTO> messages = this.messageFacade.getAllMessagesByUserId(userId,pageable);
 
         return ok(messages);

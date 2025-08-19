@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import social.network.backend.socialnetwork.entity.User;
 import social.network.backend.socialnetwork.entity.enums.Role;
 import social.network.backend.socialnetwork.repository.UserRepository;
@@ -22,6 +23,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserServiceImpl userServiceImpl;
@@ -100,6 +104,7 @@ class UserServiceImplTest {
 
         when(userRepository.existsByEmail(email)).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(password);
 
         // When
         final User result = userServiceImpl.createUser(email, name, surname, password);
@@ -162,6 +167,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(existingUser)).thenReturn(updatedUser);
+        when(passwordEncoder.encode(password)).thenReturn(password);
 
         // When
         final User result = userServiceImpl.updateUser(userId, email, name, surname, password);

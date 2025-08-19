@@ -14,7 +14,7 @@ import social.network.backend.socialnetwork.entity.enums.Role;
 import social.network.backend.socialnetwork.repository.SubscriptionRepository;
 import social.network.backend.socialnetwork.service.UserService;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,7 +59,7 @@ class SubscriptionServiceImplTest {
                 .id(subscriptionId)
                 .subscriber(subscriber)
                 .target(target)
-                .subscribedAt(LocalDateTime.now())
+                .subscribedAt(Instant.now())
                 .build();
 
         when(subscriptionRepository.findById(subscriptionId)).thenReturn(Optional.of(expectedSubscription));
@@ -116,7 +116,7 @@ class SubscriptionServiceImplTest {
                 .id(1)
                 .subscriber(subscriber)
                 .target(target)
-                .subscribedAt(LocalDateTime.now())
+                .subscribedAt(Instant.now())
                 .build();
 
         when(userService.getUserByIdOrTrow(subscriberId, ERROR_SUBSCRIBER_NOT_FOUND)).thenReturn(subscriber);
@@ -266,14 +266,14 @@ class SubscriptionServiceImplTest {
                 .id(subscriptionId)
                 .subscriber(oldSubscriber)
                 .target(oldSubscriber)
-                .subscribedAt(LocalDateTime.now())
+                .subscribedAt(Instant.now())
                 .build();
 
         final Subscription updatedSubscription = Subscription.builder()
                 .id(subscriptionId)
                 .subscriber(newSubscriber)
                 .target(newTarget)
-                .subscribedAt(LocalDateTime.now())
+                .subscribedAt(Instant.now())
                 .build();
 
         when(subscriptionRepository.findById(subscriptionId)).thenReturn(Optional.of(existingSubscription));
