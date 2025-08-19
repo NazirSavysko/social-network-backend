@@ -37,11 +37,11 @@ class AuthServiceImplTest {
     @Test
     void authenticateAndIssueJwt_success_returnsToken_andPassesCredentials() {
         // Given
-        String email = "user@example.com";
-        String rawPassword = "secret";
+        final String email = "user@example.com";
+        final String rawPassword = "secret";
 
-        UserDetails principal = new User(email, "encoded", Collections.emptyList());
-        Authentication authentication = mock(Authentication.class);
+        final UserDetails principal = new User(email, "encoded", Collections.emptyList());
+        final Authentication authentication = mock(Authentication.class);
 
         // When
         when(authenticationManager.authenticate(any(Authentication.class)))
@@ -49,12 +49,12 @@ class AuthServiceImplTest {
         when(authentication.getPrincipal()).thenReturn(principal);
         when(jwtTokenFactory.createToken(principal)).thenReturn("jwt-123");
 
-        String token = authService.authenticateAndIssueJwt(email, rawPassword);
+        final String token = authService.authenticateAndIssueJwt(email, rawPassword);
 
         // Then
         assertThat(token).isEqualTo("jwt-123");
 
-        ArgumentCaptor<Authentication> authCaptor = ArgumentCaptor.forClass(Authentication.class);
+        final ArgumentCaptor<Authentication> authCaptor = ArgumentCaptor.forClass(Authentication.class);
         verify(authenticationManager).authenticate(authCaptor.capture());
         Authentication passed = authCaptor.getValue();
         assertThat(passed).isInstanceOf(UsernamePasswordAuthenticationToken.class);

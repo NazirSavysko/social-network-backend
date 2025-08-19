@@ -22,7 +22,6 @@ public class AdminServiceImpl implements AdminService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-
     @Override
     public int postCount(final Instant start, final Instant end) {
         return this.postRepository.countPostsByPeriod(start, end);

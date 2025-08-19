@@ -46,7 +46,7 @@ class AdminServiceImplTest {
     void postCount_returnsRepositoryResult() {
         when(postRepository.countPostsByPeriod(start, end)).thenReturn(42);
 
-        int result = adminService.postCount(start, end);
+        final int result = adminService.postCount(start, end);
 
         assertThat(result).isEqualTo(42);
         verify(postRepository).countPostsByPeriod(start, end);
@@ -54,42 +54,42 @@ class AdminServiceImplTest {
 
     @Test
     void getTenTheMostActiveUsers_passesLimit10_andReturnsData() {
-        List<User> users = List.of(new User(), new User());
+        final List<User> users = List.of(new User(), new User());
         when(userRepository.findTopUsersByAvgPostsPerActiveDay(any(Limit.class), eq(start), eq(end)))
                 .thenReturn(users);
 
-        List<User> result = adminService.getTenTheMostActiveUsers(start, end);
+        final List<User> result = adminService.getTenTheMostActiveUsers(start, end);
 
         assertThat(result).isSameAs(users);
-        ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
+        final ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
         verify(userRepository).findTopUsersByAvgPostsPerActiveDay(limitCaptor.capture(), eq(start), eq(end));
         assertThat(limitCaptor.getValue()).isEqualTo(Limit.of(10));
     }
 
     @Test
     void getTenthMostCommentedPosts_passesLimit10_andReturnsData() {
-        List<Post> posts = List.of(new Post(), new Post(), new Post());
+        final List<Post> posts = List.of(new Post(), new Post(), new Post());
         when(postRepository.findTopTenMostCommentedPostsByPeriod(any(Limit.class), eq(start), eq(end)))
                 .thenReturn(posts);
 
-        List<Post> result = adminService.getTenthMostCommentedPosts(start, end);
+        final List<Post> result = adminService.getTenthMostCommentedPosts(start, end);
 
         assertThat(result).isSameAs(posts);
-        ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
+        final ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
         verify(postRepository).findTopTenMostCommentedPostsByPeriod(limitCaptor.capture(), eq(start), eq(end));
         assertThat(limitCaptor.getValue()).isEqualTo(Limit.of(10));
     }
 
     @Test
     void getTenTheMostLikedPosts_passesLimit10_andReturnsData() {
-        List<Post> posts = List.of(new Post());
+        final List<Post> posts = List.of(new Post());
         when(postRepository.findTopTenMostLikedPostsByPeriod(any(Limit.class), eq(start), eq(end)))
                 .thenReturn(posts);
 
-        List<Post> result = adminService.getTenTheMostLikedPosts(start, end);
+        final List<Post> result = adminService.getTenTheMostLikedPosts(start, end);
 
         assertThat(result).isSameAs(posts);
-        ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
+        final ArgumentCaptor<Limit> limitCaptor = ArgumentCaptor.forClass(Limit.class);
         verify(postRepository).findTopTenMostLikedPostsByPeriod(limitCaptor.capture(), eq(start), eq(end));
         assertThat(limitCaptor.getValue()).isEqualTo(Limit.of(10));
     }
@@ -98,7 +98,7 @@ class AdminServiceImplTest {
     void getAveragePostCountByDay_returnsRepositoryDouble() {
         when(postRepository.calculateAveragePostsPerDay(start, end)).thenReturn(3.5D);
 
-        double result = adminService.getAveragePostCountByDay(start, end);
+        final double result = adminService.getAveragePostCountByDay(start, end);
 
         assertThat(result).isEqualTo(3.5D);
         verify(postRepository).calculateAveragePostsPerDay(start, end);

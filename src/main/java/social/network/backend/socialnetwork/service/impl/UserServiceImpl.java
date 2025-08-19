@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 
 import static java.lang.String.format;
 import static social.network.backend.socialnetwork.entity.enums.Role.ROLE_USER;
+import static social.network.backend.socialnetwork.validation.ErrorMessages.ERROR_USER_ALREADY_EXISTS;
 import static social.network.backend.socialnetwork.validation.ErrorMessages.ERROR_USER_NOT_FOUND;
 
 @Service
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public @NotNull User createUser(final String email, final String name, final String surname, final String password) {
         if(this.userRepository.existsByEmail(email)){
-            throw new IllegalArgumentException(format("User with %s email already exists.",email));
+            throw new IllegalArgumentException(format(ERROR_USER_ALREADY_EXISTS,email));
         }
 
         final User user = User.builder()

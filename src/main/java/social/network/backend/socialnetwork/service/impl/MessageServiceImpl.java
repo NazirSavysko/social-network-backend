@@ -24,7 +24,6 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final UserService userService;
 
-
     @Contract("_ -> new")
     @Override
     public Message getMessageById(final Integer messageId) {

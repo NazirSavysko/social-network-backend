@@ -63,7 +63,7 @@ class UserDetailsServiceImlTest {
 
         });
 
-        UserDetails userDetails = userDetailsServiceIml.loadUserByUsername(userEmail);
+        final UserDetails userDetails = userDetailsServiceIml.loadUserByUsername(userEmail);
 
         // Then
         assertNotNull(userDetails);
@@ -73,7 +73,7 @@ class UserDetailsServiceImlTest {
     @Test
     void loadUserByUsername_whenUserNotFound_shouldThrow() {
         // Given
-        String userEmail = "absent@mail.com";
+        final String userEmail = "absent@mail.com";
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.empty());
 
         // When + Then

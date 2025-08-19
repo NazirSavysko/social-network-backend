@@ -3,6 +3,7 @@ package social.network.backend.socialnetwork.validation;
 public final class ErrorMessages {
     // User
    public static final String ERROR_USER_NOT_FOUND = "User not found";
+   public static final String ERROR_USER_ALREADY_EXISTS = "User with %s email already exists.";
 
    // Post
    public static final String ERROR_POST_NOT_FOUND = "Post not found";

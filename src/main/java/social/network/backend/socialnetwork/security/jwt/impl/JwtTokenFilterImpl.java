@@ -20,7 +20,6 @@ import social.network.backend.socialnetwork.security.jwt.JwtTokenReader;
 import java.io.IOException;
 import java.util.List;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
@@ -29,6 +28,7 @@ public final class JwtTokenFilterImpl extends OncePerRequestFilter {
 
     private static final int START_INDEX = 7;
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final String AUTHORIZATION = "Authorization";
 
     private final JwtTokenReader jwtTokenReader;
 
