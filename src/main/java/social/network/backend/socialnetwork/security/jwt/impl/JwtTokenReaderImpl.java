@@ -22,6 +22,8 @@ import static social.network.backend.socialnetwork.validation.ErrorMessages.*;
 @Component
 public final class JwtTokenReaderImpl implements JwtTokenReader {
 
+    private final static String AUTHORITIES_KEY = "authorities";
+
     private final SecretKey secret;
 
     public JwtTokenReaderImpl(@Value("${jwt.secret}") final String secret) {
@@ -35,7 +37,7 @@ public final class JwtTokenReaderImpl implements JwtTokenReader {
 
     @Override
     public @NotNull @Unmodifiable List<GrantedAuthority> getAuthorities(final String token) {
-        final Object raw = getClaims(token).get("authorities");
+        final Object raw = getClaims(token).get(AUTHORITIES_KEY);
         if (raw == null) {
             throw new IllegalArgumentException(ERROR_AUTHORITIES_NULL);
         }

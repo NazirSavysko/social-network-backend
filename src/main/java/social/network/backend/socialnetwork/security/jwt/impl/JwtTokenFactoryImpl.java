@@ -22,6 +22,8 @@ import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 @Component
 public final class JwtTokenFactoryImpl implements JwtTokenFactory {
 
+    private final static String AUTHORITIES_KEY = "authorities";
+
     private final SecretKey secret;
     private final Duration duration;
 
@@ -29,7 +31,6 @@ public final class JwtTokenFactoryImpl implements JwtTokenFactory {
         this.secret = hmacShaKeyFor(BASE64.decode(secret));
         this.duration = duration;
     }
-
 
     @Override
     public String createToken(final UserDetails userDetails) {
@@ -58,7 +59,7 @@ public final class JwtTokenFactoryImpl implements JwtTokenFactory {
                 .toList();
 
         return claims()
-                .add("authorities", authorities)
+                .add(AUTHORITIES_KEY, authorities)
                 .build();
     }
 }
