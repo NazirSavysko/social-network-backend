@@ -22,7 +22,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/posts")
 @AllArgsConstructor
-public final class PostsController {
+public class PostsController {
 
     private final PostFacade postFacade;
 

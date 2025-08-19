@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/subscriptions")
 @AllArgsConstructor
-public final class SubscriptionsController {
+public class SubscriptionsController {
 
     private final SubscriptionFacade subscriptionFacade;
 

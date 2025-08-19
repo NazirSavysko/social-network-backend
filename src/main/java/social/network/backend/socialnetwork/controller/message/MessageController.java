@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/v1/messages/{messageId:\\d+}")
 @AllArgsConstructor
-public final class MessageController {
+public  class MessageController {
 
     private final MessageFacade messageFacade;
 

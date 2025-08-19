@@ -20,7 +20,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/v1/subscriptions/{subscriptionId:\\d+}")
 @AllArgsConstructor
-public final class SubscriptionController {
+public class SubscriptionController {
 
     private final SubscriptionFacade subscriptionFacade;
 

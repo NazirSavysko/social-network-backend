@@ -22,7 +22,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/messages")
 @AllArgsConstructor
-public final class MessagesController {
+public class MessagesController {
 
     private final MessageFacade messageFacade;
 
