@@ -1,29 +1,43 @@
-version: '1.0'
+version: '3.8'
 
 services:
 
   postgres_db:
     image: postgres:17.6
-    ports:
-      - 5432:5432
+#    ports:
+#      - 5432:5432
+    networks:
+      - social-network
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=social-network-db
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d social-network-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   social-network-backend:
     build: .
     ports:
       - 8080:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://social-network-db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/social-network-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - APP_DATA_DIR=/data
     depends_on:
-      - postgres_db
-
+      postgres_db:
+        condition: service_healthy
     volumes:
-      - /srv/socialapp/data:/data
+      - ./app-data:/data
+    networks:
+      - social-network
+
+networks:
+  social-network:
+    driver: bridge

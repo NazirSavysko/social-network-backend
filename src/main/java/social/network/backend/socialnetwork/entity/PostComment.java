@@ -31,6 +31,6 @@ public final class PostComment {
 
     private String commentText;
 
-    private Instant dateComment;
+    private Instant commentDate;
 
 }
