@@ -20,7 +20,7 @@ services:
   social-network-backend:
     build: .
     ports:
-      - 8080:8080
+      - "443:8443"
     env_file:
       - .env
     depends_on:
@@ -28,6 +28,7 @@ services:
         condition: service_healthy
     volumes:
       - ./app-data:/data
+      - /etc/ssl/mydomain/keystore.p12:/etc/ssl/mydomain/keystore.p12:ro
     networks:
       - social-network
 
