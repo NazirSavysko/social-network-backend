@@ -28,6 +28,7 @@ services:
         condition: service_healthy
     volumes:
       - ./app-data:/data
+      - /etc/ssl/mydomain/keystore.p12:/etc/ssl/mydomain/keystore.p12:ro
     networks:
       - social-network
 
